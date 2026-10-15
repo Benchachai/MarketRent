@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>เข้าสู่ระบบหลังบ้านเจ้าหน้าที่ · MarketRent (GURU IT)</title>
+  <!-- Google Fonts: Sarabun & Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+
+  <style>
+    .admin-login-wrapper {
+      min-height: 100vh;
+      background: radial-gradient(circle at 80% 20%, #1e293b 0%, #0f172a 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .admin-login-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(2, 132, 199, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .admin-login-card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      width: 100%;
+      max-width: 440px;
+      padding: 36px 32px;
+      position: relative;
+      z-index: 10;
+      animation: adminCardFadeIn 0.35s ease-out;
+    }
+
+    @keyframes adminCardFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .admin-login-header {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    .admin-login-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+      border: 1px solid #bae6fd;
+    }
+
+    .admin-login-title {
+      font-family: 'Prompt', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 6px 0;
+    }
+
+    .admin-login-sub {
+      font-size: 13px;
+      color: #64748b;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .admin-form-group {
+      margin-bottom: 18px;
+    }
+
+    .admin-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .admin-input-wrap {
+      position: relative;
+    }
+
+    .admin-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 14.5px;
+      font-family: inherit;
+      color: #0f172a;
+      transition: all 0.2s ease;
+      background: #f8fafc;
+    }
+
+    .admin-input:focus {
+      outline: none;
+      border-color: #0284c7;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+
+    .btn-toggle-eye {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #64748b;
+      padding: 4px;
+    }
+
+    .admin-demo-box {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      font-size: 12.5px;
+      color: #475569;
+    }
+
+    .admin-demo-title {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-autofill-admin {
+      background: #0284c7;
+      color: #ffffff;
+      border: none;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .btn-autofill-admin:hover {
+      background: #0369a1;
+    }
+
+    .btn-admin-submit {
+      width: 100%;
+      padding: 13px 20px;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Prompt', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-admin-submit:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .admin-alert-banner {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .admin-alert-banner.active {
+      display: block;
+    }
+
+    .admin-login-foot {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .admin-login-foot a {
+      color: #0284c7;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .admin-login-foot a:hover {
+      text-decoration: underline;
+    }
+
+    .admin-brand-copy {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="admin-login-wrapper">
+
+    <!-- Card -->
+    <div class="admin-login-card">
+
+      <div class="admin-login-header">
+        <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:12px;">
+          <img src="images/logo.png" alt="GURU IT Solution" style="height:36px; width:auto;">
+          <span style="font-family:'Prompt'; font-size:19px; font-weight:800; color:#ea580c;">Market<span style="color:#0284c7;">Rent</span></span>
+        </div>
+
+        <span class="admin-login-badge" style="display:inline-flex; align-items:center; gap:6px;">
+          <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>ระบบหลังบ้านสำหรับเจ้าหน้าที่ (Back-Office)</span>
+        </span>
+
+        <h1 class="admin-login-title">เข้าสู่ระบบเจ้าหน้าที่</h1>
+        <p class="admin-login-sub">กองคลัง ฝ่ายจัดเก็บรายได้ เทศบาลตำบล / อบต.<br>สำหรับตรวจสอบสลิป จัดการคำร้อง และออกใบเสร็จ</p>
+      </div>
+
+      <!-- Alert Box -->
+      <div class="admin-alert-banner" id="adminAlertBanner"></div>
+
+      <!-- Login Form -->
+      <form id="adminLoginForm">
+
+        <!-- Username -->
+        <div class="admin-form-group">
+          <label class="admin-label" for="adminUsername">ชื่อผู้ใช้งานเจ้าหน้าที่ (Username)</label>
+          <div class="admin-input-wrap">
+            <input type="text" class="admin-input" id="adminUsername" placeholder="เช่น admin" required autocomplete="username">
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="admin-form-group">
+          <label class="admin-label" for="adminPassword">รหัสผ่านเจ้าหน้าที่ (Password)</label>
+          <div class="admin-input-wrap">
+            <input type="password" class="admin-input" id="adminPassword" placeholder="กรอกรหัสผ่านเจ้าหน้าที่" required autocomplete="current-password">
+            <button type="button" class="btn-toggle-eye" id="btnToggleEye" style="display:inline-flex; align-items:center; justify-content:center;" title="เปิด/ปิดดูรหัสผ่าน">
+              <svg style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Demo Account Credentials Info -->
+        <div class="admin-demo-box">
+          <div class="admin-demo-title">
+            <span style="display:inline-flex; align-items:center; gap:5px;">
+              <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>บัญชีเจ้าหน้าที่ทดสอบ</span>
+            </span>
+            <button type="button" class="btn-autofill-admin" id="btnAutofillAdmin">กรอกอัตโนมัติ</button>
+          </div>
+          <div>ชื่อผู้ใช้: <strong>admin</strong></div>
+          <div>รหัสผ่าน: <strong>admin1234</strong></div>
+          <div style="font-size:11px; color:#64748b; margin-top:2px;">(บทบาท: นายตรวจตลาด / เจ้าหน้าที่การเงิน กองคลัง)</div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-admin-submit" id="btnSubmitAdmin">
+          <span>🔐 เข้าสู่ระบบหลังบ้าน</span>
+        </button>
+
+      </form>
+
+      <!-- Footer navigation -->
+      <div class="admin-login-foot">
+        <a href="index.html">กลับไปยังหน้าหลักผู้เช่าแผงค้า (Tenant Portal)</a>
+      </div>
+
+    </div>
+
+    <div class="admin-brand-copy">
+      ระบบบริหารและชำระค่าเช่าแผงค้าออนไลน์ (MarketRent) · GURU IT Solution Co., Ltd.
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('adminLoginForm');
+      const inputUser = document.getElementById('adminUsername');
+      const inputPass = document.getElementById('adminPassword');
+      const btnToggleEye = document.getElementById('btnToggleEye');
+      const btnAutofill = document.getElementById('btnAutofillAdmin');
+      const alertBanner = document.getElementById('adminAlertBanner');
+      const btnSubmit = document.getElementById('btnSubmitAdmin');
+
+      // Check if already logged in as admin
+      const existingAdmin = (window.MarketRentAPI && window.MarketRentAPI.Admin)
+        ? window.MarketRentAPI.Admin.getStoredAdmin()
+        : JSON.parse(localStorage.getItem('marketrent_admin_user') || 'null');
+
+      const adminToken = localStorage.getItem('marketrent_admin_token');
+      if (existingAdmin && adminToken) {
+        // Already authenticated as admin, go straight to console
+        window.location.href = 'admin.html';
+        return;
+      }
+
+      function showAlert(msg) {
+        alertBanner.textContent = msg;
+        alertBanner.classList.add('active');
+      }
+
+      function hideAlert() {
+        alertBanner.textContent = '';
+        alertBanner.classList.remove('active');
+      }
+
+      // Password toggle
+      if (btnToggleEye) {
+        btnToggleEye.addEventListener('click', () => {
+          const isPassword = inputPass.type === 'password';
+          inputPass.type = isPassword ? 'text' : 'password';
+          btnToggleEye.innerHTML = isPassword
+            ? `<svg style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`
+            : `<svg style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+        });
+      }
+
+      // Autofill demo admin credentials
+      if (btnAutofill) {
+        btnAutofill.addEventListener('click', () => {
+          inputUser.value = 'admin';
+          inputPass.value = 'admin1234';
+          hideAlert();
+          inputPass.focus();
+        });
+      }
+
+      // Form submission
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideAlert();
+
+        const username = inputUser.value.trim();
+        const password = inputPass.value;
+
+        if (!username || !password) {
+          showAlert('กรุณากรอกทั้งชื่อผู้ใช้และรหัสผ่านเจ้าหน้าที่');
+          return;
+        }
+
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<span>⏳ กำลังตรวจสอบสิทธิ์...</span>';
+
+        try {
+          const API = window.MarketRentAPI || window.MarketPayAPI;
+          let result = null;
+
+          if (API && API.Admin && typeof API.Admin.login === 'function') {
+            result = await API.Admin.login(username, password);
+          } else {
+            // Direct fetch fallback
+            const res = await fetch('/api/admin/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if (res.ok && data.success) {
+              localStorage.setItem('marketrent_admin_token', data.token);
+              localStorage.setItem('marketrent_admin_user', JSON.stringify(data.admin));
+              result = { success: true, admin: data.admin };
+            } else {
+              result = { success: false, message: data.message };
+            }
+          }
+
+          if (result && result.success) {
+            btnSubmit.innerHTML = '<span>✓ เข้าสู่ระบบสำเร็จ กำลังเปิดหลังบ้าน...</span>';
+            btnSubmit.style.background = '#16a34a';
+            setTimeout(() => {
+              window.location.href = 'admin.html';
+            }, 600);
+          } else {
+            showAlert((result && result.message) || 'ชื่อผู้ใช้งานหรือรหัสผ่านเจ้าหน้าที่ไม่ถูกต้อง');
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = '<span>🔐 เข้าสู่ระบบหลังบ้าน</span>';
+          }
+
+        } catch (err) {
+          console.error('Admin login error:', err);
+          showAlert('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง');
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = '<span>🔐 เข้าสู่ระบบหลังบ้าน</span>';
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>

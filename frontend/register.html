@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ea580c">
+  <meta name="description" content="ลงทะเบียนใช้งาน MarketRent · ระบบชำระค่าเช่าแผงออนไลน์ อบต. เทศบาล">
+  <title>ลงทะเบียนใหม่ · MarketRent ค่าเช่าแผงออนไลน์</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <!-- Top Navigation Header -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="brand">
+        <img src="images/logo.png" alt="ตราสัญลักษณ์ GURU IT Solution" class="brand-logo">
+        <div class="brand-text">
+          <div class="brand-name">
+            <span class="smart">Market</span><span class="pay">Rent</span>
+          </div>
+          <div class="brand-sub">ระบบเช่าแผงค้า อบต. เทศบาล</div>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">หน้าแรก</a>
+        <a href="index.html#services" class="nav-link">บริการออนไลน์</a>
+        <a href="index.html#news" class="nav-link">ข่าวสาร</a>
+        <a href="index.html#account" class="nav-btn nav-btn-primary">เข้าสู่ระบบ</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Registration Page Wrapper -->
+  <main class="register-page-wrapper">
+
+    <!-- Breadcrumb -->
+    <nav class="register-breadcrumb" aria-label="เส้นทาง">
+      <a href="index.html">หน้าแรก</a>
+      <span>/</span>
+      <strong>ลงทะเบียนเช่าแผงค้าใหม่</strong>
+    </nav>
+
+    <!-- Two-column Layout -->
+    <div class="register-layout-grid">
+
+      <!-- Left Column: Guide & Steps -->
+      <aside class="reg-info-card">
+        <div class="reg-info-eyebrow">
+          <span class="reg-info-dot"></span>
+          <span>ระบบบริการประชาชนออนไลน์</span>
+        </div>
+        <div class="reg-info-title">ยินดีต้อนรับสู่</div>
+        <div class="reg-brand">
+          <span class="smart">Market</span><span class="pay">Rent</span>
+        </div>
+        <div class="reg-info-sub">
+          ระบบลงทะเบียนผู้เช่าแผงค้าและบริหารจัดการตลาด เทศบาล/อบต. สะดวก รวดเร็ว ตรวจสอบได้ทุกขั้นตอน
+        </div>
+
+        <!-- 2-Step Guide -->
+        <div class="reg-steps">
+          <div class="reg-step-item">
+            <div class="reg-step-num">01</div>
+            <div class="reg-step-content">
+              <h4>กรอกข้อมูลผู้ใช้งาน</h4>
+              <p>ระบุชื่อ เบอร์โทรศัพท์ และตั้งรหัสผ่านเข้าสู่ระบบ</p>
+            </div>
+          </div>
+
+          <div class="reg-step-item">
+            <div class="reg-step-num">02</div>
+            <div class="reg-step-content">
+              <h4>เลือกแผงค้าและชำระเงิน</h4>
+              <p>เข้าสู่ระบบและเลือกหมายเลขแผงค้า/ล็อคที่ต้องการชำระได้ทันที</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Left Card Footer -->
+        <div class="reg-info-footer">
+          <div class="reg-info-footer-label">มีบัญชีอยู่แล้ว?</div>
+          <a href="index.html#account">เข้าสู่ระบบ MarketRent</a>
+          <a href="index.html#contact">สอบถามข้อมูลบริการ อบต./เทศบาล</a>
+        </div>
+      </aside>
+
+      <!-- Right Column: Registration Form Card -->
+      <section class="reg-form-card" aria-labelledby="regFormTitle">
+        <div class="reg-form-overline">บัญชีผู้เช่าแผงค้าใหม่</div>
+        <h2 class="reg-form-title" id="regFormTitle">ลงทะเบียนใช้บริการ</h2>
+        <div class="reg-form-subtitle">กรอกข้อมูลผู้เช่าและตั้งรหัสผ่าน ช่องที่มี * จำเป็นต้องกรอก</div>
+
+        <div class="reg-form-divider"></div>
+
+        <form id="mainRegisterForm">
+
+          <!-- Section 1: ข้อมูลผู้ใช้งานและเข้าสู่ระบบ -->
+          <div class="reg-section">
+            <div class="reg-section-header">
+              <span class="reg-section-pill">1</span>
+              <span class="reg-section-title">ข้อมูลผู้ใช้งานและรหัสผ่าน</span>
+            </div>
+
+            <div class="reg-form-group">
+              <label class="reg-label">ประเภทผู้ใช้งาน</label>
+              <div class="reg-cards-grid">
+                <!-- Radio Option 1: บุคคลธรรมดา -->
+                <div class="reg-select-card active" id="cardTypePerson" role="radio" aria-checked="true" tabindex="0">
+                  <div class="reg-card-dot" aria-hidden="true"></div>
+                  <div class="reg-card-text">
+                    <strong>บุคคลธรรมดา</strong>
+                    <small>ผู้ค้าทั่วไป / ประชาชน</small>
+                  </div>
+                </div>
+
+                <!-- Radio Option 2: นิติบุคคล -->
+                <div class="reg-select-card" id="cardTypeCompany" role="radio" aria-checked="false" tabindex="0">
+                  <div class="reg-card-dot" aria-hidden="true"></div>
+                  <div class="reg-card-text">
+                    <strong>นิติบุคคล / ร้านค้า</strong>
+                    <small>บริษัท / ห้างหุ้นส่วน / กลุ่มวิสาหกิจ</small>
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" name="userType" id="userTypeInput" value="บุคคลธรรมดา">
+            </div>
+
+            <!-- Full Name -->
+            <div class="reg-form-group">
+              <label class="reg-label" for="regFullName">ชื่อ-นามสกุล ผู้เช่า <span class="req">*</span></label>
+              <input type="text" class="reg-input" id="regFullName" placeholder="เช่น นายสมชาย สุขสมบูรณ์" required>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="reg-form-group">
+              <label class="reg-label" for="regPhone">เบอร์โทรศัพท์ (ใช้เป็นชื่อผู้ใช้) <span class="req">*</span></label>
+              <input type="tel" class="reg-input" id="regPhone" placeholder="เช่น 0812345678" maxlength="10" required>
+              <div class="reg-input-helper">ใช้สำหรับติดต่อและเข้าสู่ระบบ MarketRent ร่วมกับรหัสผ่าน</div>
+            </div>
+
+            <!-- Passwords -->
+            <div class="reg-password-grid">
+              <div class="reg-form-group">
+                <label class="reg-label" for="regPassword">รหัสผ่าน <span class="req">*</span></label>
+                <div class="password-wrapper">
+                  <input type="password" class="reg-input" id="regPassword" placeholder="กำหนดรหัสผ่าน (4-20 ตัวอักษร)" minlength="4" required>
+                  <button type="button" class="btn-toggle-password" aria-label="แสดงรหัสผ่าน" title="แสดงรหัสผ่าน" tabindex="-1">
+                    <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="eye-icon eye-closed" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="reg-form-group">
+                <label class="reg-label" for="regConfirmPassword">ยืนยันรหัสผ่าน <span class="req">*</span></label>
+                <div class="password-wrapper">
+                  <input type="password" class="reg-input" id="regConfirmPassword" placeholder="กรอกรหัสผ่านซ้ำอีกครั้ง" minlength="4" required>
+                  <button type="button" class="btn-toggle-password" aria-label="แสดงรหัสผ่าน" title="แสดงรหัสผ่าน" tabindex="-1">
+                    <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="eye-icon eye-closed" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: บริการที่สมัคร -->
+          <div class="reg-section">
+            <div class="reg-section-header">
+              <span class="reg-section-pill">2</span>
+              <span class="reg-section-title">บริการที่สมัคร</span>
+            </div>
+
+            <div class="reg-select-card active" id="cardServiceStall" role="checkbox" aria-checked="true" style="cursor: default;">
+              <div class="reg-card-check" aria-hidden="true">✓</div>
+              <div class="reg-card-text">
+                <strong>บริการเช่าแผงค้าตลาดเทศบาล</strong>
+                <small>ชำระค่าธรรมเนียมเช่าแผงค้าประจำเดือน (อัตรา 2,000 บาท/เดือน: ค่าเช่าแผง 1,950 + ค่าเก็บขยะ 50)</small>
+              </div>
+            </div>
+            <input type="hidden" name="service" id="serviceInput" value="บริการเช่าแผงค้า">
+          </div>
+
+          <!-- Notice Alert Box -->
+          <div class="reg-alert-box">
+            <span class="reg-alert-icon" aria-hidden="true">ℹ</span>
+            <span>หลังส่งข้อมูล สามารถเข้าสู่ระบบด้วยเบอร์โทรศัพท์และรหัสผ่าน เพื่อเลือกหมายเลขแผงค้าและชำระเงินได้ทันที</span>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-reg-submit" id="btnSubmitRegistration">
+            <span>ส่งข้อมูลลงทะเบียน</span>
+          </button>
+
+          <!-- Bottom Return Link -->
+          <div class="reg-bottom-link">
+            มีบัญชีแล้ว? <a href="index.html#account">เข้าสู่ระบบ</a>
+          </div>
+        </form>
+      </section>
+
+    </div>
+
+    <!-- Page Footer Brand -->
+    <div class="reg-page-footer">
+      MarketRent · ตลาดองค์การบริหารส่วนตำบล / เทศบาล
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-nav" aria-label="เมนูมือถือ">
+    <a href="index.html"><span aria-hidden="true">⌂</span>หน้าแรก</a>
+    <a href="index.html#news"><span aria-hidden="true">▤</span>ข่าวสาร</a>
+    <a href="index.html#account"><span aria-hidden="true">◎</span>เข้าสู่ระบบ</a>
+    <a href="index.html#contact"><span aria-hidden="true">☏</span>ติดต่อ</a>
+  </nav>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toastMessage"></div>
+
+  <script src="js/logout-modal.js"></script>
+  <script src="js/api.js"></script>
+  <!-- Interactive JavaScript Logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cardTypePerson = document.getElementById('cardTypePerson');
+      const cardTypeCompany = document.getElementById('cardTypeCompany');
+      const userTypeInput = document.getElementById('userTypeInput');
+
+      const form = document.getElementById('mainRegisterForm');
+      const toast = document.getElementById('toastMessage');
+
+      function showToast(msg) {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+      }
+
+      // Password visibility toggle
+      document.querySelectorAll('.btn-toggle-password').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const wrapper = btn.closest('.password-wrapper');
+          if (!wrapper) return;
+          const input = wrapper.querySelector('input');
+          if (!input) return;
+          const isPass = input.type === 'password';
+          input.type = isPass ? 'text' : 'password';
+          const eyeOpen = btn.querySelector('.eye-open');
+          const eyeClosed = btn.querySelector('.eye-closed');
+          if (eyeOpen && eyeClosed) {
+            eyeOpen.style.display = isPass ? 'none' : 'block';
+            eyeClosed.style.display = isPass ? 'block' : 'none';
+          }
+          btn.setAttribute('aria-label', isPass ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน');
+          btn.setAttribute('title', isPass ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน');
+        });
+      });
+
+      // 1. Toggle User Type (Radio)
+      function selectUserType(type) {
+        if (type === 'person') {
+          cardTypePerson.classList.add('active');
+          cardTypePerson.setAttribute('aria-checked', 'true');
+          cardTypeCompany.classList.remove('active');
+          cardTypeCompany.setAttribute('aria-checked', 'false');
+          userTypeInput.value = 'บุคคลธรรมดา';
+        } else {
+          cardTypeCompany.classList.add('active');
+          cardTypeCompany.setAttribute('aria-checked', 'true');
+          cardTypePerson.classList.remove('active');
+          cardTypePerson.setAttribute('aria-checked', 'false');
+          userTypeInput.value = 'นิติบุคคล / ร้านค้า';
+        }
+      }
+
+      cardTypePerson.addEventListener('click', () => selectUserType('person'));
+      cardTypeCompany.addEventListener('click', () => selectUserType('company'));
+
+      // Keyboard accessibility for radio
+      [cardTypePerson, cardTypeCompany].forEach(el => {
+        el.addEventListener('keydown', (e) => {
+          if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            el.click();
+          }
+        });
+      });
+
+      // 2. Form Submission
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const userType = userTypeInput.value;
+        const fullName = document.getElementById('regFullName').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+        if (!fullName || !phone || !password || !confirmPassword) {
+          showToast('กรุณากรอกข้อมูลให้ครบถ้วนทุกช่อง');
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showToast('รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน');
+          document.getElementById('regConfirmPassword').focus();
+          return;
+        }
+
+        const cleanPhone = phone.replace(/[^0-9]/g, '');
+        if (cleanPhone.length < 9) {
+          showToast('กรุณาระบุเบอร์โทรศัพท์ที่ถูกต้อง (อย่างน้อย 9-10 หลัก)');
+          document.getElementById('regPhone').focus();
+          return;
+        }
+
+        const newUser = {
+          userType,
+          fullName,
+          phone: cleanPhone,
+          password,
+          stallNo: '-',
+          address: 'ระบุที่หน้าชำระเงิน',
+          service: 'บริการเช่าแผงค้า',
+          status: 'ปกติ'
+        };
+
+        // Register via MarketPayAPI (API or Offline Fallback)
+        let res;
+        if (window.MarketPayAPI && window.MarketPayAPI.Auth) {
+          res = await window.MarketPayAPI.Auth.register(newUser);
+        } else {
+          localStorage.setItem('smartpay_user', JSON.stringify(newUser));
+          res = { success: true, user: newUser };
+        }
+
+        if (!res.success) {
+          showToast(res.message || 'เกิดข้อผิดพลาดในการลงทะเบียน');
+          return;
+        }
+
+        // Save last registered for auto-fill on login
+        try {
+          localStorage.setItem('smartpay_last_registered', JSON.stringify({
+            phone: cleanPhone,
+            password: password,
+            fullName: fullName
+          }));
+        } catch (err) {}
+
+        // Show centered success modal
+        let modal = document.getElementById('regSuccessModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'regSuccessModal';
+          modal.className = 'success-modal-overlay';
+          modal.innerHTML = `
+            <div class="success-modal-card" role="dialog" aria-modal="true">
+              <div class="success-icon-wrap">
+                <svg class="success-icon-svg" viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <h3 class="success-modal-title">ลงทะเบียนสำเร็จ</h3>
+              <p class="success-modal-desc" style="margin-bottom:18px;">
+                ยินดีต้อนรับคุณ <strong>${fullName}</strong><br>
+                เบอร์โทร: <strong>${cleanPhone}</strong><br>
+                บัญชีของคุณพร้อมใช้งานในระบบแล้ว สามารถเข้าสู่ระบบเพื่อเลือกแผงค้าและชำระเงินได้ทันที
+              </p>
+              <div class="modal-actions-group">
+                <button type="button" class="btn-modal-action-primary" id="btnGoToPayment">
+                  <span>ไปยังหน้าชำระเงิน</span>
+                </button>
+                <button type="button" class="btn-modal-action-secondary" id="btnGoToPortal">
+                  กลับสู่หน้าหลัก / เข้าสู่ระบบ
+                </button>
+              </div>
+            </div>
+          `;
+          document.body.appendChild(modal);
+
+          document.getElementById('btnGoToPayment').addEventListener('click', () => {
+            window.location.href = 'payment.html';
+          });
+          document.getElementById('btnGoToPortal').addEventListener('click', () => {
+            window.location.href = 'index.html#account';
+          });
+        }
+
+        requestAnimationFrame(() => {
+          modal.classList.add('show');
+        });
+
+        // Auto redirect after 2.5 seconds if user does not click
+        setTimeout(() => {
+          modal.classList.remove('show');
+          modal.remove();
+          window.location.href = 'payment.html';
+        }, 2500);
+      });
+
+      // Cleanup any modals when navigating back / cache restoration
+      function cleanupRegModals() {
+        const m = document.getElementById('regSuccessModal');
+        if (m) {
+          m.classList.remove('show');
+          m.remove();
+        }
+      }
+      window.addEventListener('pageshow', cleanupRegModals);
+      window.addEventListener('pagehide', cleanupRegModals);
+    });
+  </script>
+</body>
+
+</html>

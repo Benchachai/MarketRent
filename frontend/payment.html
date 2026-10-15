@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ea580c">
+  <title>MarketRent - เลือกรายการชำระเงินค่าเช่าแผง (อบต. เทศบาล)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <!-- Top Navigation Header -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="brand">
+        <img src="images/logo.png" alt="ตราสัญลักษณ์ GURU IT Solution" class="brand-logo">
+        <div class="brand-text">
+          <div class="brand-name">
+            <span class="smart">Market</span><span class="pay">Rent</span>
+          </div>
+          <div class="brand-sub">ระบบเช่าแผงค้า อบต. เทศบาล</div>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">หน้าแรก</a>
+        <a href="payment.html" class="nav-link active">ชำระเงิน</a>
+        <a href="history.html" class="nav-link">ประวัติ</a>
+        <a href="account.html" class="nav-btn nav-btn-primary">บัญชีของฉัน</a>
+        <a href="index.html" class="nav-btn nav-btn-outline" id="btnNavLogout">ออกจากระบบ</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="page-container">
+    <div class="content-wrapper">
+
+      <!-- Left Sidebar: Resident Profile Card -->
+      <aside class="sidebar-card">
+        <div class="profile-greeting">สวัสดีคุณ</div>
+        <h2 class="profile-name">นายสมชาย สุขสมบูรณ์</h2>
+
+        <div class="profile-tags">
+          <span class="profile-pill">แผงค้า A-10</span>
+          <span class="profile-pill">โซนตลาดสด</span>
+        </div>
+
+        <!-- Action Quick-Buttons (Dedicated Stall Rent Service) -->
+        <div class="action-buttons-container">
+          <button class="action-btn action-active action-btn-full" id="btnGarbage">
+            <svg class="action-icon icon-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h20l-2 6H4L2 3z"></path>
+              <path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"></path>
+              <path d="M10 13h4v8h-4z"></path>
+            </svg>
+            <span>ค่าเช่าแผง</span>
+          </button>
+
+          <div class="action-grid-sub">
+            <button class="action-btn action-white" id="btnComplaint">
+              <svg class="action-icon icon-orange" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M3 10v4c0 .55.45 1 1 1h3l4 3.5V5.5L7 9H4c-.55 0-1 .45-1 1zm12.5-3.5c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41 1.66 1.66 1.66 4.34 0 6-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0 2.44-2.44 2.44-6.38 0-8.82zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+              </svg>
+              <span>แจ้งคำร้อง</span>
+            </button>
+
+            <a href="history.html" class="action-btn action-white" id="btnSubHistory" style="text-decoration: none;">
+              <svg class="action-icon icon-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <polyline points="3 3 3 8 8 8"></polyline>
+                <polyline points="12 7 12 12 15 15"></polyline>
+              </svg>
+              <span>ประวัติ</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Main Card: Payment Selection -->
+      <section class="main-card">
+
+        <!-- Header Section -->
+        <div class="card-header">
+          <div class="service-category">บริการชำระเงิน</div>
+          <h1 class="page-title">ชำระค่าเช่าแผงค้า</h1>
+          <p class="page-subtitle">กรอกข้อมูลแผงค้าและระบุจำนวนเงินที่ต้องการชำระ เพื่อสร้าง QR Code สแกนจ่ายเงิน</p>
+        </div>
+
+        <!-- Manual Payment Fill-in Form (แบบกรอกเอา) -->
+        <div id="sectionManualPay" class="manual-pay-card">
+          <div class="manual-pay-header">
+            <div class="manual-pay-title">
+              <span>แบบฟอร์มชำระค่าเช่าแผงค้า</span>
+            </div>
+            <div class="manual-pay-subtitle">
+              กรอกข้อมูลแผงค้าและระบุยอดเงินที่ต้องการชำระได้ตามต้องการ
+            </div>
+          </div>
+
+          <form id="formManualPay" novalidate>
+            <div class="manual-form-grid">
+              <!-- หมายเลขแผงค้า (ดรอปดาวน์ A-1 ถึง A-15) -->
+              <div class="manual-form-group">
+                <label class="manual-label" for="manualStallNo">
+                  <span>หมายเลขแผงค้า / ล็อค <span style="color:#ef4444;">*</span></span>
+                  <span class="manual-label-hint">A-1 ถึง A-15</span>
+                </label>
+                <select id="manualStallNo" class="manual-input manual-select" required>
+                  <option value="A-1">A-1 (ล็อค 1)</option>
+                  <option value="A-2">A-2 (ล็อค 2)</option>
+                  <option value="A-3">A-3 (ล็อค 3)</option>
+                  <option value="A-4">A-4 (ล็อค 4)</option>
+                  <option value="A-5">A-5 (ล็อค 5)</option>
+                  <option value="A-6">A-6 (ล็อค 6)</option>
+                  <option value="A-7">A-7 (ล็อค 7)</option>
+                  <option value="A-8">A-8 (ล็อค 8)</option>
+                  <option value="A-9">A-9 (ล็อค 9)</option>
+                  <option value="A-10">A-10 (ล็อค 10)</option>
+                  <option value="A-11">A-11 (ล็อค 11)</option>
+                  <option value="A-12">A-12 (ล็อค 12)</option>
+                  <option value="A-13">A-13 (ล็อค 13)</option>
+                  <option value="A-14">A-14 (ล็อค 14)</option>
+                  <option value="A-15">A-15 (ล็อค 15)</option>
+                </select>
+                <div id="stallOccupancyHint" style="font-size:12px; margin-top:6px; font-weight:600; display:flex; align-items:center; gap:5px;"></div>
+              </div>
+
+              <!-- โซนตลาด / ที่ตั้งร้านค้า (ล็อค 1-15 ตามหมายเลขแผง) -->
+              <div class="manual-form-group">
+                <label class="manual-label" for="manualZone">
+                  <span>โซนตลาด / ที่ตั้งร้าน</span>
+                  <span class="manual-label-hint">ตามหมายเลขแผง</span>
+                </label>
+                <select id="manualZone" class="manual-input manual-select">
+                  <option value="ล็อค 1">ล็อค 1</option>
+                  <option value="ล็อค 2">ล็อค 2</option>
+                  <option value="ล็อค 3">ล็อค 3</option>
+                  <option value="ล็อค 4">ล็อค 4</option>
+                  <option value="ล็อค 5">ล็อค 5</option>
+                  <option value="ล็อค 6">ล็อค 6</option>
+                  <option value="ล็อค 7">ล็อค 7</option>
+                  <option value="ล็อค 8">ล็อค 8</option>
+                  <option value="ล็อค 9">ล็อค 9</option>
+                  <option value="ล็อค 10">ล็อค 10</option>
+                  <option value="ล็อค 11">ล็อค 11</option>
+                  <option value="ล็อค 12">ล็อค 12</option>
+                  <option value="ล็อค 13">ล็อค 13</option>
+                  <option value="ล็อค 14">ล็อค 14</option>
+                  <option value="ล็อค 15">ล็อค 15</option>
+                </select>
+              </div>
+
+              <!-- ชื่อ-นามสกุล ผู้ชำระ -->
+              <div class="manual-form-group">
+                <label class="manual-label" for="manualPayerName">
+                  <span>ชื่อ-นามสกุล ผู้ชำระ <span style="color:#ef4444;">*</span></span>
+                </label>
+                <input type="text" id="manualPayerName" class="manual-input" placeholder="ชื่อ-นามสกุล" required>
+              </div>
+
+              <!-- เบอร์โทรศัพท์ -->
+              <div class="manual-form-group">
+                <label class="manual-label" for="manualPhone">
+                  <span>เบอร์โทรศัพท์ <span style="color:#ef4444;">*</span></span>
+                </label>
+                <input type="tel" id="manualPhone" class="manual-input" placeholder="08xxxxxxxx" required>
+              </div>
+
+              <!-- เลือกรอบเดือนที่ต้องการชำระ -->
+              <div class="manual-form-group full-width">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
+                  <label class="manual-label" style="margin-bottom: 0;">
+                    <span>เลือกรอบเดือนที่ต้องการชำระ <span style="color:#ef4444;">*</span></span>
+                  </label>
+                </div>
+                
+                <div class="month-selection-grid" id="monthSelectionGrid">
+                  <!-- Dynamically rendered 12 months from ม.ค. to ธ.ค. -->
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 12px; color: #64748b; flex-wrap: wrap; gap: 6px;">
+                  <span id="selectedMonthsCountText"><span style="color:#ef4444; font-weight:600;">ยังไม่ได้เลือกรอบเดือน (กรุณาเลือกอย่างน้อย 1 เดือน)</span></span>
+                  <button type="button" id="btnSelectAllMonths" class="btn-select-all-months">เลือกเดือนทั้งหมด</button>
+                </div>
+              </div>
+
+              <!-- จำนวนเงินที่ต้องการชำระ -->
+              <div class="manual-form-group full-width">
+                <label class="manual-label" for="manualAmountInput">
+                  <span>จำนวนเงินที่ต้องการชำระ (บาท) <span style="color:#ef4444;">*</span></span>
+                  <span class="manual-label-hint">เดือนละ 2,000 บาท</span>
+                </label>
+                
+                <div class="manual-amount-wrapper">
+                  <span class="manual-amount-currency">฿</span>
+                  <input type="number" id="manualAmountInput" class="manual-amount-input" placeholder="คำนวณอัตโนมัติ (เดือนละ 2,000 บาท)" value="" min="1" step="any" required>
+                  <span class="manual-amount-unit">บาท</span>
+                </div>
+              </div>
+
+              <!-- รายละเอียด / หมายเหตุเพิ่มเติม -->
+              <div class="manual-form-group full-width">
+                <label class="manual-label" for="manualRemark">
+                  <span>รายละเอียด / หมายเหตุ (ถ้ามี)</span>
+                  <span class="manual-label-hint">ค่าเช่าแผง 1950 + ค่าเก็บขยะ 50</span>
+                </label>
+                <input type="text" id="manualRemark" class="manual-input" placeholder="ค่าเช่าแผง 1950 + ค่าเก็บขยะ 50" value="ค่าเช่าแผง 1950 + ค่าเก็บขยะ 50">
+              </div>
+            </div>
+
+            <!-- Summary Box -->
+            <div class="manual-summary-box">
+              <div class="manual-summary-row">
+                <span>บริการ:</span>
+                <strong>บริการเช่าแผงค้า (อบต./เทศบาล)</strong>
+              </div>
+              <div class="manual-summary-row">
+                <span>รายการชำระ:</span>
+                <span id="manualSummaryPeriodText">ค่าเช่าแผง 1950 + ค่าเก็บขยะ 50</span>
+              </div>
+              <div class="manual-summary-row">
+                <span>ค่าธรรมเนียมการโอน:</span>
+                <span style="color:#10b981; font-weight:600;">ฟรี (0.00 บาท)</span>
+              </div>
+              <div class="manual-summary-row total-row">
+                <span>ยอดเงินที่ต้องชำระสุทธิ:</span>
+                <span class="manual-summary-total-val" id="manualSummaryTotalText">0.00 บาท</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-manual-pay" id="btnSubmitManualPay">
+              <span>สร้าง QR Code และแจ้งชำระเงิน (<span id="btnAmountText">0.00</span> บาท)</span>
+            </button>
+          </form>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- Payment Modal Dialog -->
+  <div class="modal-backdrop" id="paymentModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">ชำระเงินผ่าน QR Code</h3>
+        <button class="modal-close" id="btnCloseModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="promptpay-header">
+          <div class="promptpay-badge">Thai QR Payment</div>
+          <div class="org-name">เทศบาล / องค์การบริหารส่วนตำบล</div>
+        </div>
+        <div class="qr-container">
+          <svg class="qr-image" viewBox="0 0 200 200" fill="none">
+            <rect width="200" height="200" fill="#ffffff" />
+            <rect x="20" y="20" width="40" height="40" stroke="#0f172a" stroke-width="6" fill="none" />
+            <rect x="32" y="32" width="16" height="16" fill="#0f172a" />
+            <rect x="140" y="20" width="40" height="40" stroke="#0f172a" stroke-width="6" fill="none" />
+            <rect x="152" y="32" width="16" height="16" fill="#0f172a" />
+            <rect x="20" y="140" width="40" height="40" stroke="#0f172a" stroke-width="6" fill="none" />
+            <rect x="32" y="152" width="16" height="16" fill="#0f172a" />
+            <g fill="#0f172a">
+              <rect x="75" y="20" width="8" height="8" />
+              <rect x="90" y="20" width="8" height="8" />
+              <rect x="110" y="20" width="8" height="8" />
+              <rect x="80" y="35" width="8" height="8" />
+              <rect x="100" y="35" width="8" height="8" />
+              <rect x="120" y="35" width="8" height="8" />
+              <rect x="20" y="75" width="8" height="8" />
+              <rect x="35" y="85" width="8" height="8" />
+              <rect x="50" y="75" width="8" height="8" />
+              <rect x="70" y="70" width="14" height="14" />
+              <rect x="95" y="70" width="10" height="10" />
+              <rect x="115" y="75" width="8" height="8" />
+              <rect x="140" y="75" width="8" height="8" />
+              <rect x="160" y="80" width="10" height="10" />
+              <rect x="70" y="95" width="10" height="10" />
+              <rect x="90" y="95" width="20" height="20" />
+              <rect x="120" y="95" width="8" height="8" />
+              <rect x="140" y="95" width="12" height="12" />
+              <rect x="165" y="105" width="8" height="8" />
+              <rect x="20" y="115" width="10" height="10" />
+              <rect x="40" y="115" width="15" height="15" />
+              <rect x="70" y="125" width="15" height="15" />
+              <rect x="100" y="125" width="10" height="10" />
+              <rect x="120" y="125" width="15" height="15" />
+              <rect x="145" y="125" width="10" height="10" />
+              <rect x="165" y="135" width="8" height="8" />
+              <rect x="75" y="150" width="10" height="10" />
+              <rect x="95" y="150" width="15" height="15" />
+              <rect x="120" y="150" width="10" height="10" />
+              <rect x="140" y="155" width="15" height="15" />
+              <rect x="165" y="165" width="8" height="8" />
+              <rect x="75" y="170" width="15" height="15" />
+              <rect x="105" y="170" width="8" height="8" />
+              <rect x="125" y="170" width="10" height="10" />
+            </g>
+          </svg>
+        </div>
+        <div class="qr-details">
+          <div class="qr-amount-label">ยอดที่ต้องชำระ</div>
+          <div class="qr-amount-val" id="modalAmount">0.00 บาท</div>
+          <div class="qr-items-list" id="modalItemsList"></div>
+        </div>
+        <div class="modal-actions" style="margin-bottom: 6px;">
+          <button class="btn-confirm-pay" id="btnConfirmPay" style="width: 100%; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+            <svg style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>บันทึกรูปภาพ QR Code</span>
+          </button>
+        </div>
+
+        <!-- Slip Attachment Section -->
+        <div class="slip-upload-section">
+          <div class="slip-upload-title" style="display:flex; align-items:center; gap:6px;">
+            <svg style="width:16px; height:16px; color:#ea580c;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            <span>แนบสลิปหลักฐานการโอนเงิน</span>
+          </div>
+          <div class="slip-upload-desc">
+            เมื่อสแกนชำระผ่านแอปธนาคารแล้ว กรุณาแนบสลิปเพื่อยืนยันยอดค่าเช่าแผง
+          </div>
+
+          <input type="file" id="slipFileInput" accept="image/*" style="display: none;">
+          
+          <div class="slip-btn-group">
+            <button type="button" class="btn-slip-pick" id="btnPickSlip" style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+              <svg style="width:15px; height:15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+              <span>แนบสลิป</span>
+            </button>
+          </div>
+
+          <!-- Preview Box -->
+          <div class="slip-preview-box" id="slipPreviewBox" style="display: none;">
+            <img src="" alt="สลิปโอนเงิน" class="slip-preview-thumb" id="slipPreviewImg">
+            <div class="slip-preview-info">
+              <strong id="slipFileName">slip_transfer.jpg</strong><br>
+              <span style="color: #10b981; font-weight: 600;">✓ สลิปพร้อมส่งตรวจสอบ</span>
+            </div>
+            <button type="button" class="slip-preview-remove" id="btnRemoveSlip" title="ลบสลิป">&times;</button>
+          </div>
+
+          <!-- Confirm button -->
+          <button type="button" class="btn-confirm-slip-pay" id="btnConfirmPayWithSlip">
+            <span>ยืนยันการแจ้งชำระเงิน</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: แจ้งคำร้อง / ปัญหา -->
+  <div class="complaint-modal-overlay" id="complaintModal">
+    <div class="complaint-modal-card" role="dialog" aria-labelledby="complaintTitle" aria-modal="true">
+      <div class="complaint-modal-header">
+        <h2 class="complaint-modal-title" id="complaintTitle">แจ้งคำร้อง / ปัญหา</h2>
+        <button type="button" class="complaint-btn-close" id="btnCloseComplaint" aria-label="ปิด">✕</button>
+      </div>
+
+      <form id="complaintForm">
+        <div class="complaint-form-group">
+          <label class="complaint-form-label" for="complaintService">บริการที่ต้องการแจ้ง</label>
+          <div class="complaint-select-wrapper">
+            <select class="complaint-select" id="complaintService" name="service" required>
+              <option value="ค่าเช่าแผง / การเช่าแผงค้า" selected>ค่าเช่าแผง / การเช่าแผงค้า</option>
+            </select>
+            <div class="complaint-select-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="complaint-form-group">
+          <label class="complaint-form-label" for="complaintTopic">หัวข้อ</label>
+          <div class="complaint-select-wrapper">
+            <select class="complaint-select" id="complaintTopic" name="topic" required>
+              <option value="แจ้งงดใช้แผงค้าชั่วคราว (ระบุเดือน)">แจ้งงดใช้แผงค้าชั่วคราว (ระบุเดือน)</option>
+              <option value="ร้องเรียนการให้บริการแผงค้า" selected>ร้องเรียนการให้บริการแผงค้า</option>
+              <option value="สอบถามทั่วไป">สอบถามทั่วไป</option>
+            </select>
+            <div class="complaint-select-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="complaint-form-group">
+          <label class="complaint-form-label" for="complaintDetail">รายละเอียดเพิ่มเติม</label>
+          <textarea class="complaint-textarea" id="complaintDetail" name="detail" rows="4" placeholder="ระบุรายละเอียด..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-complaint-submit" id="btnSubmitComplaint">ส่งข้อมูล</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast" id="toastMessage"></div>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-nav" aria-label="เมนูมือถือ">
+    <a href="index.html"><span aria-hidden="true">⌂</span>หน้าแรก</a>
+    <a href="payment.html" class="active"><span aria-hidden="true">฿</span>ชำระเงิน</a>
+    <a href="history.html"><span aria-hidden="true">▤</span>ประวัติ</a>
+    <a href="account.html"><span aria-hidden="true">◎</span>บัญชี</a>
+  </nav>
+
+  <script src="js/logout-modal.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js?v=20261015_03"></script>
+</body>
+
+</html>

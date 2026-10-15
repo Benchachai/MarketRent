@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ea580c">
+  <title>MarketRent - แจ้งคำร้อง / ปัญหา (อบต. เทศบาล)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Top Navigation Header -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="brand">
+        <img src="images/logo.png" alt="ตราสัญลักษณ์ GURU IT Solution" class="brand-logo">
+        <div class="brand-text">
+          <div class="brand-name">
+            <span class="smart">Market</span><span class="pay">Rent</span>
+          </div>
+          <div class="brand-sub">ระบบเช่าแผงค้า อบต. เทศบาล</div>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">หน้าแรก</a>
+        <a href="payment.html" class="nav-link">ชำระเงิน</a>
+        <a href="history.html" class="nav-link">ประวัติ</a>
+        <a href="account.html" class="nav-link">บัญชีของฉัน</a>
+        <a href="index.html" class="nav-btn nav-btn-outline">ออกจากระบบ</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Standalone Complaint Page Content -->
+  <main class="complaint-standalone-page">
+    <div class="complaint-modal-card" style="box-shadow: 0 10px 30px rgba(0,0,0,0.06); border: 1px solid #fed7aa;">
+      
+      <!-- Card Header -->
+      <div class="complaint-modal-header">
+        <h1 class="complaint-modal-title">แจ้งคำร้อง / ปัญหา</h1>
+        <a href="account.html" class="complaint-btn-close" aria-label="กลับ" style="text-decoration:none;">✕</a>
+      </div>
+
+      <!-- Complaint Form -->
+      <form id="standaloneComplaintForm">
+        <!-- 1. บริการที่ต้องการแจ้ง -->
+        <div class="complaint-form-group">
+          <label class="complaint-form-label" for="complaintService">บริการที่ต้องการแจ้ง</label>
+          <div class="complaint-select-wrapper">
+            <select class="complaint-select" id="complaintService" name="service" required>
+              <option value="ค่าเช่าแผง / การเช่าแผงค้า" selected>ค่าเช่าแผง / การเช่าแผงค้า</option>
+            </select>
+            <div class="complaint-select-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. หัวข้อ -->
+        <div class="complaint-form-group">
+          <label class="complaint-form-label" for="complaintTopic">หัวข้อ</label>
+          <div class="complaint-select-wrapper">
+            <select class="complaint-select" id="complaintTopic" name="topic" required>
+              <option value="แจ้งงดใช้แผงค้าชั่วคราว (ระบุเดือน)">แจ้งงดใช้แผงค้าชั่วคราว (ระบุเดือน)</option>
+              <option value="ร้องเรียนการให้บริการแผงค้า" selected>ร้องเรียนการให้บริการแผงค้า</option>
+              <option value="สอบถามทั่วไป">สอบถามทั่วไป</option>
+            </select>
+            <div class="complaint-select-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. รายละเอียดเพิ่มเติม -->
+        <div class="complaint-form-group">
+          <label class="complaint-form-label" for="complaintDetail">รายละเอียดเพิ่มเติม</label>
+          <textarea class="complaint-textarea" id="complaintDetail" name="detail" rows="4" placeholder="ระบุรายละเอียด..." required></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-complaint-submit" id="btnSubmitComplaint">ส่งข้อมูล</button>
+
+        <div style="text-align:center; margin-top:14px;">
+          <a href="history.html?tab=complaint" style="font-size:13px; color:#ea580c; font-weight:600; text-decoration:underline;">
+            ▤ ตรวจสอบประวัติคำร้องและผลการตอบกลับจากเจ้าหน้าที่
+          </a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toastMessage"></div>
+
+  <script src="js/logout-modal.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Auth Check: Require login before accessing complaint page
+      if (!localStorage.getItem('smartpay_user')) {
+        window.location.href = 'index.html#account';
+        return;
+      }
+
+      // Logout handler with confirmation modal
+      const btnLogout = document.querySelector('.nav-btn-outline');
+      if (btnLogout) {
+        btnLogout.dataset.logoutBound = 'true';
+        btnLogout.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (typeof window.showLogoutConfirm === 'function') {
+            window.showLogoutConfirm(() => {
+              localStorage.removeItem('smartpay_user');
+              window.location.href = 'index.html#account';
+            });
+          } else {
+            localStorage.removeItem('smartpay_user');
+            window.location.href = 'index.html#account';
+          }
+        });
+      }
+
+      const form = document.getElementById('standaloneComplaintForm');
+      const toast = document.getElementById('toastMessage');
+
+      function showToast(msg) {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
+      }
+
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const service = document.getElementById('complaintService')?.value || 'ค่าเช่าแผง / การเช่าแผงค้า';
+          const topic = document.getElementById('complaintTopic')?.value || 'ร้องเรียนการให้บริการแผงค้า';
+          const detail = document.getElementById('complaintDetail')?.value || '';
+
+          const newComplaint = {
+            id: 'REQ-' + Date.now().toString().slice(-6),
+            service,
+            topic,
+            detail,
+            date: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' }),
+            status: 'รอดำเนินการ',
+            adminReply: ''
+          };
+
+          if (window.MarketPayAPI && window.MarketPayAPI.Complaints) {
+            await window.MarketPayAPI.Complaints.create(newComplaint);
+          } else {
+            const complaints = JSON.parse(localStorage.getItem('smartpay_complaints') || '[]');
+            complaints.unshift(newComplaint);
+            localStorage.setItem('smartpay_complaints', JSON.stringify(complaints));
+          }
+
+          showToast('ส่งข้อมูลเรียบร้อยแล้ว กำลังไปที่ประวัติคำร้อง...');
+          setTimeout(() => {
+            window.location.href = 'history.html?tab=complaint';
+          }, 1100);
+        });
+      }
+    });
+  </script>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-nav" aria-label="เมนูมือถือ">
+    <a href="index.html"><span aria-hidden="true">⌂</span>หน้าแรก</a>
+    <a href="payment.html"><span aria-hidden="true">฿</span>ชำระเงิน</a>
+    <a href="history.html"><span aria-hidden="true">▤</span>ประวัติ</a>
+    <a href="account.html"><span aria-hidden="true">◎</span>บัญชี</a>
+  </nav>
+</body>
+</html>

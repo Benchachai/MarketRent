@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MarketRent - ระบบหลังบ้านจัดการแผงค้าและออกใบเสร็จ (GURU IT)</title>
+  <!-- Google Fonts: Sarabun & Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/receipt.css">
+  <!-- SheetJS for Export to Excel (.xlsx) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+
+<body class="admin-body">
+
+  <!-- Admin Navbar (Locked & Organized) -->
+  <header class="admin-navbar">
+    <div class="admin-nav-left">
+      <a href="admin.html" class="admin-brand-link" title="ระบบหลังบ้าน MarketRent">
+        <img src="images/logo.png" alt="GURU IT Solution" class="admin-nav-logo">
+        <div class="admin-brand-wrap">
+          <div class="admin-brand-title">
+            <span>Market</span><span class="brand-blue">Rent</span>
+            <span class="admin-role-badge">ระบบหลังบ้าน</span>
+          </div>
+          <div class="admin-brand-subtitle">ระบบบริหารจัดการค่าเช่าแผงค้าและตรวจสอบสลิป เทศบาล / อบต.</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="admin-nav-right">
+      <!-- Server Status Badge -->
+      <div class="admin-status-badge" id="serverStatusBadge">
+        <span class="admin-status-dot"></span> กำลังตรวจสอบระบบ...
+      </div>
+
+      <!-- Officer Badge -->
+      <div class="admin-officer-pill" id="officerInfoBadge">
+        <svg class="svg-icon svg-icon-sm officer-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span class="officer-name" id="officerNameDisplay">นายตรวจตลาด กองคลัง</span>
+      </div>
+
+      <div class="admin-nav-divider" aria-hidden="true"></div>
+
+      <!-- Audio Notification Toggle -->
+      <button type="button" class="admin-nav-btn" id="btnSoundToggle" title="เปิด/ปิดเสียงแจ้งเตือนสลิปใหม่">
+        <span id="soundIcon" class="nav-btn-icon"><svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>
+        <span id="soundText" class="nav-btn-text">เสียงเตือน: เปิด</span>
+      </button>
+
+      <!-- Tenant Portal Shortcut -->
+      <a href="index.html" class="admin-nav-btn" title="เปิดหน้าเว็บฝั่งผู้เช่าแผงค้า">
+        <svg class="svg-icon svg-icon-sm nav-btn-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        <span class="nav-btn-text">หน้าผู้เช่า</span>
+      </a>
+
+      <!-- Officer Logout Button -->
+      <button type="button" class="admin-nav-btn admin-btn-logout" id="btnAdminLogout" title="ออกจากระบบเจ้าหน้าที่">
+        <svg class="svg-icon svg-icon-sm nav-btn-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        <span class="nav-btn-text">ออกจากระบบ</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="admin-container">
+
+    <!-- Top Header -->
+    <div class="admin-page-header">
+      <div>
+        <h1 class="admin-page-title">ศูนย์จัดการหลังบ้าน (Officer Management Console)</h1>
+        <p class="admin-page-desc">ตรวจสอบหลักฐานการโอนเงิน (สลิป), จัดการเรื่องร้องเรียน/คำร้องของผู้เช่า และออกใบเสร็จรับเงินทางการ</p>
+      </div>
+    </div>
+
+    <!-- 4 Stats Cards (Clickable) -->
+    <section class="admin-stats-grid">
+      <div class="admin-stat-card stat-revenue" id="cardStatRevenue" title="คลิกเพื่อดูรายการชำระเงินทั้งหมด">
+        <div>
+          <div class="stat-info-title">ยอดเงินค่าเช่าที่ได้รับ</div>
+          <div class="stat-info-val" id="statTotalRevenue">0.00 ฿</div>
+          <div class="stat-info-sub" style="display:inline-flex; align-items:center; gap:4px;">
+            <svg class="svg-icon svg-icon-xs" style="color:#16a34a;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>รวมทุกรอบบิลที่ชำระแล้ว</span>
+          </div>
+        </div>
+        <div class="stat-icon-wrap">
+          <span style="font-weight:800; font-size:26px; font-family:sans-serif; line-height:1;">฿</span>
+        </div>
+      </div>
+
+      <div class="admin-stat-card stat-slips" id="cardStatSlips" title="คลิกเพื่อกรองเฉพาะรายการสลิปที่รอตรวจสอบ">
+        <div>
+          <div class="stat-info-title">สลิปที่รอตรวจสอบ</div>
+          <div class="stat-info-val" id="statPendingSlips">0</div>
+          <div class="stat-info-sub" style="color:#b45309; display:inline-flex; align-items:center; gap:4px;">
+            <svg class="svg-icon svg-icon-xs" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <span>รายการแจ้งโอนใหม่</span>
+          </div>
+        </div>
+        <div class="stat-icon-wrap">
+          <svg class="svg-icon svg-icon-stat" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        </div>
+      </div>
+
+      <div class="admin-stat-card stat-complaints" id="cardStatComplaints" title="คลิกเพื่อกรองเฉพาะเรื่องร้องเรียนที่รอดำเนินการ">
+        <div>
+          <div class="stat-info-title">คำร้องที่รอดำเนินการ</div>
+          <div class="stat-info-val" id="statPendingComplaints">0</div>
+          <div class="stat-info-sub" style="color:#dc2626; display:inline-flex; align-items:center; gap:4px;">
+            <svg class="svg-icon svg-icon-xs" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>รอนายตรวจตลาดแก้ไข</span>
+          </div>
+        </div>
+        <div class="stat-icon-wrap">
+          <svg class="svg-icon svg-icon-stat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </div>
+      </div>
+
+      <div class="admin-stat-card stat-tenants" id="cardStatTenants" title="คลิกเพื่อดูทะเบียนผู้เช่าและแผงค้า">
+        <div>
+          <div class="stat-info-title">ผู้เช่าแผงค้าในระบบ</div>
+          <div class="stat-info-val" id="statTotalTenants">1</div>
+          <div class="stat-info-sub" style="color:#0369a1; display:inline-flex; align-items:center; gap:4px;">
+            <svg class="svg-icon svg-icon-xs" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>แผงค้าที่ลงทะเบียน</span>
+          </div>
+        </div>
+        <div class="stat-icon-wrap">
+          <svg class="svg-icon svg-icon-stat" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="admin-tabs-nav" aria-label="แถบเมนูหลังบ้าน">
+      <button type="button" class="admin-tab-btn active" id="tabBtnPayments">
+        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        <span>ตรวจสอบสลิป & การชำระเงิน</span>
+        <span class="admin-tab-badge" id="countBadgePayments">0</span>
+      </button>
+      <button type="button" class="admin-tab-btn" id="tabBtnComplaints">
+        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        <span>เรื่องร้องเรียน & คำร้อง</span>
+        <span class="admin-tab-badge" id="countBadgeComplaints">0</span>
+      </button>
+      <button type="button" class="admin-tab-btn" id="tabBtnTenants">
+        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>ทะเบียนแผงค้า & ผู้เช่า</span>
+        <span class="admin-tab-badge" id="countBadgeTenants">0</span>
+      </button>
+    </nav>
+
+    <!-- Section 1: Payments & Slip Verification -->
+    <section id="tabSectionPayments">
+      <div class="admin-filter-bar">
+        <div style="display:flex; gap:10px; flex:1; min-width:280px; flex-wrap:wrap;">
+          <input type="text" class="admin-search-input" id="searchPayments" placeholder="ค้นหาเลขที่ใบเสร็จ, ชื่อผู้เช่า, เลขแผงค้า หรือเบอร์โทร..." style="flex:1;">
+          <select class="admin-filter-select" id="filterPaymentStatus">
+            <option value="all">สถานะทั้งหมด</option>
+            <option value="pending">รอตรวจสอบสลิป</option>
+            <option value="approved">ชำระเงินเรียบร้อย / อนุมัติแล้ว</option>
+            <option value="rejected">สลิปไม่ถูกต้อง / ปฏิเสธ</option>
+          </select>
+        </div>
+        <div class="admin-filter-actions">
+          <button type="button" class="btn-action-add" id="btnOpenAddPaymentModal">
+            <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>บันทึกชำระเงิน</span>
+          </button>
+          <button type="button" class="btn-action-excel" id="btnExportPaymentsExcel" title="ส่งออกข้อมูลรายการชำระเงินเป็นไฟล์ Excel (.xlsx)">
+            <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M8 13h8"></path><path d="M8 17h8"></path><path d="M10 9h4"></path></svg>
+            <span>ส่งออก Excel</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-card-table">
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>วันที่ทำรายการ</th>
+                <th>เลขที่ใบเสร็จ</th>
+                <th>ผู้ชำระเงิน</th>
+                <th>แผงค้า / ที่ตั้ง</th>
+                <th>รอบเดือนที่ชำระ</th>
+                <th>ยอดชำระ</th>
+                <th>สลิปหลักฐาน</th>
+                <th>สถานะ</th>
+                <th>การทำงาน</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyPayments">
+              <tr>
+                <td colspan="9" class="admin-empty-state">กำลังโหลดข้อมูล...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Complaints & Petitions -->
+    <section id="tabSectionComplaints" style="display:none;">
+      <div class="admin-filter-bar">
+        <div style="display:flex; gap:10px; flex:1; min-width:280px; flex-wrap:wrap;">
+          <input type="text" class="admin-search-input" id="searchComplaints" placeholder="ค้นหาเลขที่คำร้อง, หัวข้อ, หรือเบอร์โทร..." style="flex:1;">
+          <select class="admin-filter-select" id="filterComplaintStatus">
+            <option value="all">สถานะทั้งหมด</option>
+            <option value="pending">รอดำเนินการ</option>
+            <option value="processing">กำลังดำเนินการ</option>
+            <option value="resolved">ดำเนินการแก้ไขแล้ว</option>
+          </select>
+        </div>
+        <div class="admin-filter-actions">
+          <button type="button" class="btn-action-add" id="btnOpenAddComplaintModal">
+            <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>เพิ่มคำร้อง</span>
+          </button>
+          <button type="button" class="btn-action-excel" id="btnExportComplaintsExcel" title="ส่งออกข้อมูลคำร้อง/เรื่องร้องเรียนเป็นไฟล์ Excel (.xlsx)">
+            <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M8 13h8"></path><path d="M8 17h8"></path><path d="M10 9h4"></path></svg>
+            <span>ส่งออก Excel</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-card-table">
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>วันที่แจ้ง</th>
+                <th>เลขที่คำร้อง</th>
+                <th>ชื่อผู้ใช้</th>
+                <th>หัวข้อเรื่อง</th>
+                <th>รายละเอียด</th>
+                <th>เบอร์ติดต่อ</th>
+                <th>สถานะ</th>
+                <th>การทำงาน</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyComplaints">
+              <tr>
+                <td colspan="8" class="admin-empty-state">กำลังโหลดข้อมูล...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Tenants Directory -->
+    <section id="tabSectionTenants" style="display:none;">
+      <div class="admin-filter-bar">
+        <div style="display:flex; gap:10px; flex:1; min-width:280px; flex-wrap:wrap;">
+          <input type="text" class="admin-search-input" id="searchTenants" placeholder="ค้นหาชื่อผู้เช่า, เลขแผงค้า, หรือเบอร์โทรศัพท์..." style="flex:1;">
+        </div>
+        <div class="admin-filter-actions">
+          <button type="button" class="btn-action-add" id="btnOpenAddTenantModal">
+            <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>เพิ่มผู้เช่าแผงค้า</span>
+          </button>
+          <button type="button" class="btn-action-excel" id="btnExportTenantsExcel" title="ส่งออกทะเบียนผู้เช่าและแผงค้าเป็นไฟล์ Excel (.xlsx)">
+            <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M8 13h8"></path><path d="M8 17h8"></path><path d="M10 9h4"></path></svg>
+            <span>ส่งออก Excel</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-card-table">
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ลำดับ</th>
+                <th>ชื่อ-นามสกุล / ร้านค้า</th>
+                <th>หมายเลขแผงค้า</th>
+                <th>โซนตลาด / ที่ตั้ง</th>
+                <th>เบอร์โทรศัพท์ (ชื่อผู้ใช้)</th>
+                <th>รหัสผ่าน (Password)</th>
+                <th>สถานะบัญชี</th>
+                <th>การทำงาน</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyTenants">
+              <tr>
+                <td colspan="8" class="admin-empty-state">กำลังโหลดข้อมูล...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       MODAL 1: Slip Inspection & Verification Modal
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="slipInspectionModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" style="display:inline-flex; align-items:center; gap:8px;">
+          <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <span>ตรวจสอบสลิปหลักฐานการโอนเงิน</span>
+        </h3>
+        <button type="button" class="admin-modal-close" id="btnCloseSlipModal">&times;</button>
+      </div>
+      <div class="admin-modal-body">
+        <div class="slip-large-container">
+          <img src="" alt="ภาพสลิปขนาดใหญ่" class="slip-large-img" id="inspectSlipImg">
+        </div>
+
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px; font-size:13.5px; line-height:1.6;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span style="color:#64748b;">ผู้โอน/ผู้ชำระ:</span>
+            <strong id="inspectPayerName" style="color:#0f172a;">-</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span style="color:#64748b;">หมายเลขแผงค้า:</span>
+            <strong id="inspectStallInfo" style="color:#1e40af;">-</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span style="color:#64748b;">ยอดเงินตามแจ้ง:</span>
+            <strong id="inspectAmount" style="color:#ea580c; font-size:16px;">-</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span style="color:#64748b;">เลขที่ใบเสร็จ:</span>
+            <span id="inspectReceiptNo" style="font-family:monospace; font-weight:700;">-</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span style="color:#64748b;">วันที่-เวลาแจ้ง:</span>
+            <span id="inspectDate">-</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:#64748b;">สถานะปัจจุบัน:</span>
+            <span id="inspectStatus" style="font-weight:700;">-</span>
+          </div>
+        </div>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="btn-table-action" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;" id="btnRejectSlip">
+          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <span>สลิปไม่ถูกต้อง (ปฏิเสธ)</span>
+        </button>
+        <button type="button" class="admin-nav-btn admin-nav-btn-primary" style="background:#16a34a;" id="btnApproveSlip">
+          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span>อนุมัติการชำระเงิน</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 2: Complaint Management Modal
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="adminComplaintModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" style="display:inline-flex; align-items:center; gap:8px;">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          <span>จัดการคำร้องและเรื่องร้องเรียน</span>
+        </h3>
+        <button type="button" class="admin-modal-close" id="btnCloseComplaintModal">&times;</button>
+      </div>
+      <form id="formUpdateComplaint">
+        <div class="admin-modal-body">
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px; margin-bottom:16px; font-size:13.5px; line-height:1.6;">
+            <div style="color:#64748b; font-size:12px;">เลขที่คำร้อง: <strong id="compModalReqId" style="color:#ea580c;">-</strong> · ชื่อผู้ใช้: <strong id="compModalUserName" style="color:#0f172a;">-</strong> · เบอร์ติดต่อ: <span id="compModalPhone">-</span></div>
+            <div style="font-weight:700; color:#0f172a; margin:6px 0 4px 0; font-size:15px;" id="compModalTopic">-</div>
+            <div style="color:#334155; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; padding:10px 12px;" id="compModalDetail">-</div>
+          </div>
+
+          <div style="margin-bottom:14px;">
+            <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:#1e293b;">ปรับสถานะคำร้อง</label>
+            <select class="admin-filter-select" id="compModalStatusSelect" style="width:100%;">
+              <option value="รอดำเนินการ">รอดำเนินการ</option>
+              <option value="กำลังดำเนินการ">กำลังดำเนินการ (เจ้าหน้าที่กำลังลงพื้นที่/ประสานงาน)</option>
+              <option value="ดำเนินการแก้ไขแล้ว">ดำเนินการแก้ไขแล้ว (เสร็จสิ้น)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:#1e293b;">บันทึกการดำเนินการของเจ้าหน้าที่ (Officer Note)</label>
+            <textarea id="compModalReplyInput" rows="3" style="width:100%; border:1px solid #cbd5e1; border-radius:8px; padding:8px 12px; font-size:13.5px; box-sizing:border-box; outline:none;" placeholder="ระบุการดำเนินการ เช่น ได้เปลี่ยนหลอดไฟให้เรียบร้อยแล้วเมื่อวันที่..."></textarea>
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="submit" class="admin-nav-btn admin-nav-btn-primary">
+            <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>บันทึกการดำเนินการ</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 3: Official Municipal Receipt (ถอดแบบตามรูปภาพการประปา/เทศบาลของผู้ใช้)
+       ========================================================================== -->
+  <div class="receipt-modal-backdrop" id="officialReceiptModal">
+    <div class="receipt-dialog-container">
+
+      <!-- Action buttons above receipt -->
+      <div class="receipt-modal-actions">
+        <button type="button" class="btn-receipt-action btn-receipt-close" id="btnCloseReceipt">
+          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <span>ปิดหน้าต่าง</span>
+        </button>
+        <button type="button" class="btn-receipt-action btn-receipt-print" id="btnPrintReceipt">
+          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          <span>สั่งพิมพ์ใบเสร็จ (Print Receipt)</span>
+        </button>
+      </div>
+
+      <!-- The Official Receipt Paper Sheet -->
+      <div class="official-receipt-sheet" id="printableReceiptArea">
+
+        <!-- Top Header: Logo + Contact (Left) & Title + Org (Right) -->
+        <div class="receipt-header-row">
+          <div class="receipt-brand-left">
+            <img src="images/logo.png" alt="GURU IT" class="receipt-logo-img">
+            <div class="receipt-contact-info">
+              <span class="receipt-callcenter">Call Center 1662</span>
+              <span>www.guruit.co.th</span><br>
+              <span>E-mail: support@guruit.co.th</span>
+            </div>
+          </div>
+
+          <div class="receipt-title-right">
+            <div class="receipt-main-title">ใบเสร็จรับเงินค่าเช่าแผงค้า</div>
+            <div class="receipt-subtitle">(ระบบบริหารและชำระค่าเช่าแผงค้า - MarketRent)</div>
+            <div class="receipt-org-name">กองคลัง เทศบาลตำบล / อบต.</div>
+            <div class="receipt-branch-tel">
+              สาขา <strong>ตลาดสดเทศบาล</strong><br>
+              โทรศัพท์ <strong>034-711601</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Body Layout: Content + Vertical Barcode -->
+        <div class="receipt-body-layout">
+          
+          <div class="receipt-content-col">
+            <!-- 3-Column Header Blue Grid Table -->
+            <table class="receipt-blue-grid">
+              <thead>
+                <tr>
+                  <th style="width:38%;">เลขที่ใบเสร็จ</th>
+                  <th style="width:34%;">รหัสผู้เช่า/แผงค้า</th>
+                  <th style="width:28%;">หน่วยงาน</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="rcptReceiptNo" style="font-family:monospace; font-size:12px; font-weight:800; color:#1e40af;">REC-11835801</td>
+                  <td id="rcptStallNo" style="font-weight:700;">A-10</td>
+                  <td id="rcptOrgCode">1183-64</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="receipt-blue-grid">
+              <thead>
+                <tr>
+                  <th style="width:38%;">วันที่ออกใบเสร็จ</th>
+                  <th style="width:34%;">งวดประจำเดือน</th>
+                  <th style="width:28%;">โซนตลาด/ล็อค</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="rcptIssueDate">15/10/2569</td>
+                  <td id="rcptBillingPeriod" style="font-size:10.5px;">มกราคม 2570</td>
+                  <td id="rcptZoneRoute" style="font-size:10.5px;">โซนตลาดสด</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Tenant Name & Address -->
+            <div class="receipt-tenant-info-box">
+              <div><span class="receipt-tenant-label">ชื่อผู้เช่า:</span> <span class="receipt-tenant-val" id="rcptPayerName">นายสมชาย สุขสมบูรณ์</span></div>
+              <div><span class="receipt-tenant-label">ที่อยู่/แผง:</span> <span class="receipt-tenant-val" id="rcptPayerAddress">แผงค้า A-10 โซนตลาดสด ตลาดเทศบาล</span></div>
+            </div>
+
+            <!-- Fee Breakdown Table with Crisp Blue Borders -->
+            <table class="receipt-fee-table">
+              <thead>
+                <tr>
+                  <th style="width:58%;">รายการค่าธรรมเนียมเช่าแผง</th>
+                  <th style="width:27%;">จำนวนเงิน</th>
+                  <th style="width:15%;">หน่วย</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="item-name">ค่าเช่าพื้นที่แผงค้าตลาด</td>
+                  <td class="item-amount" id="rcptRentFee">30.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr>
+                  <td class="item-name">ค่าบำรุงรักษาตลาดและส่วนกลาง</td>
+                  <td class="item-amount" id="rcptMaintFee">15.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr>
+                  <td class="item-name">ค่าบริการจัดเก็บขยะและดูแลความสะอาด</td>
+                  <td class="item-amount" id="rcptTrashFee">5.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr>
+                  <td class="item-name">ค่าบริการทั่วไป</td>
+                  <td class="item-amount">0.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr style="background:#f1f5f9;">
+                  <td class="item-name" style="font-weight:700;">รวมเงินครั้งนี้</td>
+                  <td class="item-amount" id="rcptSubtotal" style="font-weight:700;">50.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr>
+                  <td class="item-name">ภาษีมูลค่าเพิ่ม (VAT)</td>
+                  <td class="item-amount">0.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr>
+                  <td class="item-name">ค้างชำระ (0 เดือน)</td>
+                  <td class="item-amount">0.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr class="highlight-total">
+                  <td class="item-name">รวมเงินที่ชำระทั้งสิ้น</td>
+                  <td class="item-amount" id="rcptGrandTotal">50.00</td>
+                  <td class="item-unit" style="font-weight:800; color:#1e3a8a;">บาท</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Notice & Digital Signatures -->
+            <div class="receipt-footer-section">
+              <div class="receipt-notice-text">
+                โปรดเก็บใบเสร็จรับเงินนี้ไว้เป็นหลักฐานการเช่าพื้นที่แผงค้าตลาดประจำงวด<br>
+                <strong>หากมีข้อสงสัยเกี่ยวกับค่าธรรมเนียม กรุณาติดต่อกองคลัง เทศบาลตำบล / อบต.</strong>
+              </div>
+
+              <div class="receipt-sign-row">
+                <!-- PAID Official Stamp -->
+                <div class="receipt-stamp-paid">
+                  PAID · ชำระแล้ว<br>
+                  <span id="rcptStampDate" style="font-size:9.5px; font-weight:600;">15/10/2569</span>
+                </div>
+
+                <!-- Officer Signature -->
+                <div class="receipt-signature-box">
+                  <div class="receipt-signature-line"></div>
+                  <div>(นายตรวจตลาด / เจ้าหน้าที่การเงิน)</div>
+                  <div style="font-size:9px; color:#94a3b8;">ผู้รับเงิน กองคลังเทศบาล</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Vertical Barcode Strip Column (Right side, like the photo) -->
+          <div class="receipt-barcode-col">
+            <div class="vertical-barcode-wrap">
+              <div class="simulated-barcode-strip"></div>
+              <span class="barcode-text-vertical" id="rcptBarcodeText">1183580159730</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 4: Tenant Add / Edit Modal
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="adminTenantModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="tenantModalTitle" style="display:inline-flex; align-items:center; gap:8px;">
+          <svg class="svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>เพิ่มผู้เช่าแผงค้าใหม่</span>
+        </h3>
+        <button type="button" class="admin-modal-close" id="btnCloseTenantModal">&times;</button>
+      </div>
+      <form id="formTenantCRUD">
+        <input type="hidden" id="tenantModalId" value="">
+        <div class="admin-modal-body">
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="tenantModalFullName">ชื่อ-นามสกุล / ชื่อร้านค้า <span class="req">*</span></label>
+              <input type="text" class="admin-form-input" id="tenantModalFullName" required placeholder="เช่น นายสมชาย สุขสมบูรณ์">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="tenantModalPhone">เบอร์โทรศัพท์ <span class="req">*</span></label>
+              <input type="tel" class="admin-form-input" id="tenantModalPhone" required placeholder="เช่น 0812345678" maxlength="10">
+            </div>
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="tenantModalStallNo">หมายเลขแผงค้า <span class="req">*</span></label>
+              <div style="display:flex; gap:8px;">
+                <select class="admin-form-select" id="tenantModalStallSelect" style="flex:1;">
+                  <option value="">-- เลือกแผง (A-1 ถึง A-15) --</option>
+                  <option value="A-1">A-1 (ล็อค 1)</option>
+                  <option value="A-2">A-2 (ล็อค 2)</option>
+                  <option value="A-3">A-3 (ล็อค 3)</option>
+                  <option value="A-4">A-4 (ล็อค 4)</option>
+                  <option value="A-5">A-5 (ล็อค 5)</option>
+                  <option value="A-6">A-6 (ล็อค 6)</option>
+                  <option value="A-7">A-7 (ล็อค 7)</option>
+                  <option value="A-8">A-8 (ล็อค 8)</option>
+                  <option value="A-9">A-9 (ล็อค 9)</option>
+                  <option value="A-10">A-10 (ล็อค 10)</option>
+                  <option value="A-11">A-11 (ล็อค 11)</option>
+                  <option value="A-12">A-12 (ล็อค 12)</option>
+                  <option value="A-13">A-13 (ล็อค 13)</option>
+                  <option value="A-14">A-14 (ล็อค 14)</option>
+                  <option value="A-15">A-15 (ล็อค 15)</option>
+                  <option value="custom">ระบุเอง...</option>
+                </select>
+                <input type="text" class="admin-form-input" id="tenantModalStallNo" required placeholder="เช่น A-10 หรือ B-05" style="flex:1;">
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="tenantModalUserType">ประเภทผู้เช่า</label>
+              <select class="admin-form-select" id="tenantModalUserType">
+                <option value="บุคคลธรรมดา">บุคคลธรรมดา</option>
+                <option value="นิติบุคคล/ร้านค้า">นิติบุคคล/ร้านค้า</option>
+                <option value="ร้านค้าอาหารสด">ร้านค้าอาหารสด</option>
+                <option value="ร้านค้าอาหารปรุงสำเร็จ">ร้านค้าอาหารปรุงสำเร็จ</option>
+                <option value="ร้านค้าทั่วไป/เบ็ดเตล็ด">ร้านค้าทั่วไป/เบ็ดเตล็ด</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="tenantModalAddress">ที่ตั้งแผงค้า / โซนตลาด</label>
+            <input type="text" class="admin-form-input" id="tenantModalAddress" placeholder="เช่น แผงค้า A-10 โซนตลาดสด ล็อค 10 ตลาดเทศบาล">
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="tenantModalPassword">
+                รหัสผ่านเข้าใช้งาน (Password)
+                <span style="font-weight: normal; color: #64748b; font-size: 11px;">(สำหรับเข้าสู่ระบบ)</span>
+              </label>
+              <div style="display:flex; gap:8px;">
+                <input type="text" class="admin-form-input" id="tenantModalPassword" placeholder="เช่น 123456" style="flex:1;">
+                <button type="button" class="btn-table-action" id="btnGenTenantPwd" style="white-space:nowrap; padding: 0 12px; font-size:12px;" title="สุ่มรหัสผ่าน 6 หลัก">
+                  <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                  <span>สุ่มรหัส</span>
+                </button>
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="tenantModalStatus">สถานะบัญชี</label>
+              <select class="admin-form-select" id="tenantModalStatus">
+                <option value="ปกติ">ปกติ (เปิดใช้งานแผงค้า)</option>
+                <option value="รอต่อสัญญา">รอต่อสัญญา</option>
+                <option value="พักการใช้งาน">พักการใช้งาน</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn-table-action" id="btnCancelTenantModal">ยกเลิก</button>
+          <button type="submit" class="admin-nav-btn admin-nav-btn-primary">
+            <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            <span>บันทึกข้อมูลผู้เช่า</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 5: Payment Add / Edit Modal
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="adminPaymentModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="paymentModalTitle" style="display:inline-flex; align-items:center; gap:8px;">
+          <svg class="svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>บันทึกการชำระเงินใหม่</span>
+        </h3>
+        <button type="button" class="admin-modal-close" id="btnClosePaymentModal">&times;</button>
+      </div>
+      <form id="formPaymentCRUD">
+        <input type="hidden" id="paymentModalId" value="">
+        <div class="admin-modal-body">
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="paymentModalReceiptNo">เลขที่ใบเสร็จ</label>
+              <input type="text" class="admin-form-input" id="paymentModalReceiptNo" placeholder="ระบบจะสร้างให้อัตโนมัติถ้าเว้นว่าง">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="paymentModalDate">วันที่ชำระ</label>
+              <input type="text" class="admin-form-input" id="paymentModalDate" placeholder="เช่น 15 ต.ค. 2569 10:30">
+            </div>
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="paymentModalPayerName">ชื่อผู้ชำระเงิน <span class="req">*</span></label>
+              <input type="text" class="admin-form-input" id="paymentModalPayerName" required placeholder="เช่น นายสมชาย สุขสมบูรณ์">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="paymentModalPhone">เบอร์โทรศัพท์ <span class="req">*</span></label>
+              <input type="tel" class="admin-form-input" id="paymentModalPhone" required placeholder="เช่น 0812345678" maxlength="10">
+            </div>
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="paymentModalStallNo">หมายเลขแผงค้า <span class="req">*</span></label>
+              <div style="display:flex; gap:8px;">
+                <select class="admin-form-select" id="paymentModalStallSelect" style="flex:1;">
+                  <option value="">-- เลือกแผง (A-1 ถึง A-15) --</option>
+                  <option value="A-1">A-1 (ล็อค 1)</option>
+                  <option value="A-2">A-2 (ล็อค 2)</option>
+                  <option value="A-3">A-3 (ล็อค 3)</option>
+                  <option value="A-4">A-4 (ล็อค 4)</option>
+                  <option value="A-5">A-5 (ล็อค 5)</option>
+                  <option value="A-6">A-6 (ล็อค 6)</option>
+                  <option value="A-7">A-7 (ล็อค 7)</option>
+                  <option value="A-8">A-8 (ล็อค 8)</option>
+                  <option value="A-9">A-9 (ล็อค 9)</option>
+                  <option value="A-10">A-10 (ล็อค 10)</option>
+                  <option value="A-11">A-11 (ล็อค 11)</option>
+                  <option value="A-12">A-12 (ล็อค 12)</option>
+                  <option value="A-13">A-13 (ล็อค 13)</option>
+                  <option value="A-14">A-14 (ล็อค 14)</option>
+                  <option value="A-15">A-15 (ล็อค 15)</option>
+                  <option value="custom">ระบุเอง...</option>
+                </select>
+                <input type="text" class="admin-form-input" id="paymentModalStallNo" required placeholder="เช่น แผงค้า A-10" style="flex:1;">
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="paymentModalZone">โซนตลาด / ที่ตั้ง</label>
+              <input type="text" class="admin-form-input" id="paymentModalZone" placeholder="เช่น โซนตลาดสด ล็อค 10">
+            </div>
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="paymentModalAmount">ยอดชำระ (บาท) <span class="req">*</span></label>
+              <input type="number" step="0.01" min="1" class="admin-form-input" id="paymentModalAmount" required placeholder="50.00">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="paymentModalStatus">สถานะการชำระเงิน</label>
+              <select class="admin-form-select" id="paymentModalStatus">
+                <option value="ชำระเงินเรียบร้อย (อนุมัติแล้ว)">ชำระเงินเรียบร้อย (อนุมัติแล้ว)</option>
+                <option value="ชำระเงินเรียบร้อย">ชำระเงินเรียบร้อย</option>
+                <option value="รอตรวจสอบ">รอตรวจสอบสลิป</option>
+                <option value="ปฏิเสธ (สลิปไม่ถูกต้อง)">ปฏิเสธ (สลิปไม่ถูกต้อง)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="paymentModalMonths">รอบเดือนที่ชำระ (คั่นด้วยจุลภาค)</label>
+            <input type="text" class="admin-form-input" id="paymentModalMonths" placeholder="เช่น มกราคม, กุมภาพันธ์">
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="paymentModalRemark">หมายเหตุ</label>
+            <input type="text" class="admin-form-input" id="paymentModalRemark" placeholder="ระบุหมายเหตุเพิ่มเติม (ถ้ามี)">
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn-table-action" id="btnCancelPaymentModal">ยกเลิก</button>
+          <button type="submit" class="admin-nav-btn admin-nav-btn-primary">
+            <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            <span>บันทึกรายการชำระเงิน</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 6: Complaint Add / Edit Modal (Full CRUD)
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="adminComplaintFormModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="complaintFormModalTitle" style="display:inline-flex; align-items:center; gap:8px;">
+          <svg class="svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>เพิ่มเรื่องร้องเรียน / คำร้อง</span>
+        </h3>
+        <button type="button" class="admin-modal-close" id="btnCloseComplaintFormModal">&times;</button>
+      </div>
+      <form id="formComplaintCRUD">
+        <input type="hidden" id="complaintModalId" value="">
+        <div class="admin-modal-body">
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="complaintModalTopic">หัวข้อเรื่องร้องเรียน / คำร้อง <span class="req">*</span></label>
+            <input type="text" class="admin-form-input" id="complaintModalTopic" required placeholder="เช่น ไฟฟ้าส่องสว่างบริเวณทางเดินดับ">
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="complaintModalUserName">ชื่อผู้ใช้ / ผู้ส่งคำร้อง</label>
+              <input type="text" class="admin-form-input" id="complaintModalUserName" placeholder="เช่น นายสมชาย สุขสมบูรณ์">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="complaintModalPhone">เบอร์โทรติดต่อ <span class="req">*</span></label>
+              <input type="tel" class="admin-form-input" id="complaintModalPhone" required placeholder="เช่น 0812345678" maxlength="10">
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="complaintModalService">ประเภทบริการ</label>
+            <select class="admin-form-select" id="complaintModalService">
+              <option value="ค่าเช่าแผง / การเช่าแผงค้า">ค่าเช่าแผง / การเช่าแผงค้า</option>
+              <option value="ระบบไฟฟ้า / ประปา">ระบบไฟฟ้า / ประปา</option>
+              <option value="ความสะอาด / การจัดเก็บขยะ">ความสะอาด / การจัดเก็บขยะ</option>
+              <option value="การจัดระเบียบพื้นที่แผงค้า">การจัดระเบียบพื้นที่แผงค้า</option>
+              <option value="เรื่องอื่นๆ">เรื่องอื่นๆ</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="complaintModalDetail">รายละเอียดคำร้อง <span class="req">*</span></label>
+            <textarea class="admin-form-textarea" id="complaintModalDetail" rows="3" required placeholder="ระบุรายละเอียดของปัญหาหรือข้อเสนอแนะ..."></textarea>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="complaintModalStatus">สถานะการดำเนินงาน</label>
+            <select class="admin-form-select" id="complaintModalStatus">
+              <option value="รอดำเนินการ">รอดำเนินการ</option>
+              <option value="กำลังดำเนินการ">กำลังดำเนินการ (เจ้าหน้าที่ลงพื้นที่/ประสานงาน)</option>
+              <option value="ดำเนินการแก้ไขแล้ว">ดำเนินการแก้ไขแล้ว (เสร็จสิ้น)</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label" for="complaintModalAdminReply">บันทึกการดำเนินการของเจ้าหน้าที่</label>
+            <textarea class="admin-form-textarea" id="complaintModalAdminReply" rows="2" placeholder="ระบุการดำเนินการแก้ไข เช่น ได้ประสานงานกองช่างเข้าซ่อมเรียบร้อย"></textarea>
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn-table-action" id="btnCancelComplaintFormModal">ยกเลิก</button>
+          <button type="submit" class="admin-nav-btn admin-nav-btn-primary">
+            <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            <span>บันทึกคำร้อง</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 7: Delete Confirmation Modal
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="adminDeleteConfirmModal">
+    <div class="admin-modal-card modal-danger">
+      <div class="admin-modal-header" style="background:#fef2f2; border-bottom:1px solid #fee2e2;">
+        <h3 class="admin-modal-title" style="color:#991b1b; display:inline-flex; align-items:center; gap:8px;">
+          <svg class="svg-icon" style="color:#dc2626;" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span>ยืนยันการลบข้อมูล</span>
+        </h3>
+        <button type="button" class="admin-modal-close" id="btnCloseDeleteModal">&times;</button>
+      </div>
+      <div class="admin-modal-body">
+        <div class="delete-confirm-box">
+          <div class="delete-confirm-icon">
+            <svg class="svg-icon" style="width:48px; height:48px; color:#ef4444;" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+          </div>
+          <div class="delete-confirm-title">ต้องการลบรายการนี้ใช่หรือไม่?</div>
+          <p class="delete-confirm-desc">เมื่อลบข้อมูลแล้ว รายการนี้จะถูกลบออกจากฐานข้อมูลและระบบทันที</p>
+          <div class="delete-confirm-target" id="deleteConfirmTargetInfo">-</div>
+        </div>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="btn-table-action" id="btnCancelDelete">
+          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <span>ยกเลิก</span>
+        </button>
+        <button type="button" class="btn-table-action btn-delete" id="btnConfirmDelete" style="padding:8px 16px; font-weight:700;">
+          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span>ยืนยันการลบ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Live Notification Alert Banner -->
+  <div class="live-notify-banner" id="liveNotifyBanner">
+    <div class="live-notify-icon">
+      <svg class="svg-icon svg-icon-lg" style="color:#ea580c;" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+    </div>
+    <div style="flex:1;">
+      <div class="live-notify-title" id="liveNotifyTitle">มีสลิปใหม่รอตรวจสอบ!</div>
+      <div class="live-notify-desc" id="liveNotifyDesc">มีรายการแจ้งโอนเงินแนบสลิปเข้ามาใหม่</div>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="live-notify-btn" id="btnLiveNotifyInspect">
+          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          <span>ตรวจสลิปทันที</span>
+        </button>
+      </div>
+    </div>
+    <button type="button" class="live-notify-close" id="btnCloseLiveNotify" title="ปิดการแจ้งเตือน">&times;</button>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toastMessage"></div>
+
+  <!-- Scripts -->
+  <script src="js/logout-modal.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+
+</html>

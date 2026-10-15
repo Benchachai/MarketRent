@@ -1,0 +1,16 @@
+{
+  "name": "marketpay",
+  "version": "1.0.0",
+  "description": "MarketPay - Online Stall Rental & Payment System (GURU IT Solution)",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "cd backend && npm run dev",
+    "client": "npx serve frontend -p 3000",
+    "dev": "node backend/server.js",
+    "backend:install": "cd backend && npm install",
+    "setup": "cd backend && npm install"
+  },
+  "keywords": ["marketpay", "express", "mysql", "postgres", "nodejs"],
+  "author": "GURU IT Solution Co., Ltd.",
+  "license": "ISC"
+}

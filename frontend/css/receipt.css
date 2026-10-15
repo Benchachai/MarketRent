@@ -1,0 +1,445 @@
+/* ==========================================================================
+   MarketRent - Official Municipal Receipt Styles (ถอดแบบตามใบเสร็จทางการ)
+   GURU IT Solution Co., Ltd.
+   ========================================================================== */
+
+/* Receipt Modal Backdrop */
+.receipt-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.receipt-modal-backdrop.active {
+  display: flex;
+}
+
+/* Receipt Dialog Wrapper */
+.receipt-dialog-container {
+  background: transparent;
+  max-width: 520px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: receiptSlideUp 0.25s ease-out;
+}
+
+@keyframes receiptSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Modal Action Bar (Screen Only) */
+.receipt-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 440px;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.btn-receipt-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+}
+
+.btn-receipt-print {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+}
+
+.btn-receipt-print:hover {
+  background: #1e40af;
+  transform: translateY(-1px);
+}
+
+.btn-receipt-close {
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-receipt-close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* ==========================================================================
+   Receipt Paper Sheet (ถอดแบบใบแจ้งหนี้/ใบเสร็จการประปาและเทศบาล)
+   ========================================================================== */
+.official-receipt-sheet {
+  background: #ffffff;
+  width: 100%;
+  max-width: 440px;
+  padding: 24px 20px 20px 20px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #1e293b;
+  position: relative;
+  box-sizing: border-box;
+  border-top: 4px solid #1e40af;
+}
+
+/* Top Section: Logo Left + Title Right */
+.receipt-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.receipt-brand-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 130px;
+}
+
+.receipt-logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 4px;
+}
+
+.receipt-contact-info {
+  font-size: 10px;
+  line-height: 1.35;
+  color: #1e3a8a;
+  font-weight: 500;
+}
+
+.receipt-callcenter {
+  font-weight: 700;
+  font-size: 11px;
+  color: #1e40af;
+  display: block;
+  margin-top: 2px;
+}
+
+.receipt-title-right {
+  flex: 1;
+  text-align: right;
+  padding-left: 10px;
+}
+
+.receipt-main-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin: 0 0 2px 0;
+  line-height: 1.25;
+}
+
+.receipt-subtitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: #dc2626;
+  margin: 0 0 3px 0;
+}
+
+.receipt-org-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0 0 2px 0;
+}
+
+.receipt-branch-tel {
+  font-size: 10.5px;
+  color: #334155;
+  line-height: 1.3;
+}
+
+/* Content Area with Vertical Barcode on the Right */
+.receipt-body-layout {
+  display: flex;
+  gap: 10px;
+  position: relative;
+}
+
+.receipt-content-col {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Vertical Barcode Graphic Column */
+.receipt-barcode-col {
+  width: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px dashed #cbd5e1;
+  padding-left: 6px;
+}
+
+.vertical-barcode-wrap {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.simulated-barcode-strip {
+  width: 18px;
+  height: 220px;
+  background: repeating-linear-gradient(
+    0deg,
+    #0f172a 0px,
+    #0f172a 2px,
+    #ffffff 2px,
+    #ffffff 4px,
+    #0f172a 4px,
+    #0f172a 7px,
+    #ffffff 7px,
+    #ffffff 9px,
+    #0f172a 9px,
+    #0f172a 10px,
+    #ffffff 10px,
+    #ffffff 12px
+  );
+  border: 1px solid #94a3b8;
+}
+
+.barcode-text-vertical {
+  font-family: monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #475569;
+}
+
+/* Blue Box Grids (เอกลักษณ์สไตล์สลิปเทศบาล/ค่าน้ำ) */
+.receipt-blue-grid {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  border: 1.5px solid #1e40af;
+}
+
+.receipt-blue-grid th {
+  background-color: #eff6ff;
+  color: #1e3a8a;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-align: center;
+  padding: 4px 6px;
+  border: 1px solid #1e40af;
+  line-height: 1.2;
+}
+
+.receipt-blue-grid td {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  padding: 4px 6px;
+  border: 1px solid #1e40af;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+/* Tenant Details Row */
+.receipt-tenant-info-box {
+  margin-bottom: 8px;
+  padding: 4px 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: #1e293b;
+}
+
+.receipt-tenant-label {
+  font-weight: 700;
+  color: #1e3a8a;
+  display: inline-block;
+  min-width: 60px;
+}
+
+.receipt-tenant-val {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Detailed Calculation Fee Table */
+.receipt-fee-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  border: 1.5px solid #1e40af;
+}
+
+.receipt-fee-table th {
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 4px 6px;
+  border: 1px solid #1e40af;
+  text-align: center;
+}
+
+.receipt-fee-table td {
+  padding: 3.5px 6px;
+  border: 1px solid #1e40af;
+  font-size: 11px;
+}
+
+.receipt-fee-table .item-name {
+  text-align: left;
+  color: #334155;
+  font-weight: 500;
+}
+
+.receipt-fee-table .item-amount {
+  text-align: right;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.receipt-fee-table .item-unit {
+  text-align: center;
+  color: #64748b;
+  font-size: 10px;
+  width: 35px;
+}
+
+.receipt-fee-table tr.highlight-total {
+  background: #f8fafc;
+}
+
+.receipt-fee-table tr.highlight-total td {
+  font-weight: 800;
+  color: #1e3a8a;
+  font-size: 12.5px;
+  border-top: 2px solid #1e40af;
+  border-bottom: 2px solid #1e40af;
+}
+
+.receipt-fee-table tr.highlight-total .item-amount {
+  color: #dc2626;
+  font-size: 13.5px;
+}
+
+/* Footer Notices & Digital Signatures */
+.receipt-footer-section {
+  border-top: 1px dashed #94a3b8;
+  padding-top: 8px;
+  margin-top: 6px;
+}
+
+.receipt-notice-text {
+  font-size: 9.5px;
+  line-height: 1.35;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.receipt-notice-text strong {
+  color: #dc2626;
+}
+
+.receipt-sign-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 6px;
+  position: relative;
+}
+
+/* Stamp "PAID / ชำระเงินเรียบร้อย" */
+.receipt-stamp-paid {
+  border: 2.5px solid #16a34a;
+  color: #16a34a;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  transform: rotate(-7deg);
+  display: inline-block;
+  opacity: 0.9;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.receipt-signature-box {
+  text-align: center;
+  font-size: 10.5px;
+  color: #475569;
+}
+
+.receipt-signature-line {
+  width: 120px;
+  border-bottom: 1px dotted #64748b;
+  margin: 16px auto 3px auto;
+}
+
+/* Print Styling */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .receipt-modal-backdrop,
+  .receipt-modal-backdrop * {
+    visibility: visible;
+  }
+
+  .receipt-modal-backdrop {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  .receipt-modal-actions {
+    display: none !important;
+  }
+
+  .official-receipt-sheet {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 15px !important;
+    border-top: none !important;
+  }
+}

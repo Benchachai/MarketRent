@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ea580c">
+  <title>MarketRent - ประวัติการชำระเงินและใบเสร็จ (อบต. เทศบาล)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/receipt.css">
+</head>
+<body>
+  <!-- Top Navigation Header -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="brand">
+        <img src="images/logo.png" alt="ตราสัญลักษณ์ GURU IT Solution" class="brand-logo">
+        <div class="brand-text">
+          <div class="brand-name">
+            <span class="smart">Market</span><span class="pay">Rent</span>
+          </div>
+          <div class="brand-sub">ระบบเช่าแผงค้า อบต. เทศบาล</div>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">หน้าแรก</a>
+        <a href="payment.html" class="nav-link">ชำระเงิน</a>
+        <a href="history.html" class="nav-btn nav-btn-primary">ประวัติ</a>
+        <a href="account.html" class="nav-link">บัญชีของฉัน</a>
+        <a href="index.html" class="nav-btn nav-btn-outline">ออกจากระบบ</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="full-card-container">
+    <div class="inner-content-card">
+      
+      <div class="inner-header">
+        <div class="inner-overline">บัญชีของฉัน</div>
+        <h1 class="inner-title">ประวัติการใช้งาน</h1>
+        <div class="inner-subtitle" id="historyUserSubtitle">กำลังโหลดข้อมูล...</div>
+      </div>
+
+      <!-- History Tabs (การชำระเงิน / คำร้อง) -->
+      <div class="history-tabs">
+        <button type="button" class="btn-history-tab active" id="tabPayHistory">การชำระเงิน (0)</button>
+        <button type="button" class="btn-history-tab inactive" id="tabComplaintHistory">คำร้อง (0)</button>
+      </div>
+
+      <!-- History Content Area -->
+      <div id="historyContentArea">
+        <div class="history-empty-text" id="historyEmptyText">
+          ยังไม่มีประวัติการชำระเงิน
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:20px;">
+        <a href="index.html" class="btn-back-payment" style="background:#fff7ed; color:#ea580c; border-color:#fed7aa;">⌂ หน้าแรก</a>
+        <a href="payment.html" class="btn-back-payment">กลับไปชำระเงิน</a>
+        <button type="button" class="btn-back-payment" id="btnOpenNewComplaint" style="background:#fff7ed; color:#ea580c; border-color:#fed7aa;">＋ แจ้งคำร้องใหม่</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal: แจ้งคำร้อง / ปัญหา -->
+  <div class="complaint-modal-overlay" id="complaintModal">
+    <div class="complaint-modal-card" role="dialog" aria-labelledby="complaintTitle" aria-modal="true">
+      <div class="complaint-modal-header">
+        <h2 class="complaint-modal-title" id="complaintTitle">แจ้งคำร้อง / ปัญหา</h2>
+        <button type="button" class="complaint-btn-close" id="btnCloseComplaint" aria-label="ปิด">✕</button>
+      </div>
+
+      <form id="complaintForm">
+        <div class="complaint-form-group">
+          <label class="complaint-form-label" for="complaintService">บริการที่ต้องการแจ้ง</label>
+          <div class="complaint-select-wrapper">
+            <select class="complaint-select" id="complaintService" name="service" required>
+              <option value="ค่าเช่าแผง / การเช่าแผงค้า" selected>ค่าเช่าแผง / การเช่าแผงค้า</option>
+            </select>
+            <div class="complaint-select-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="complaint-form-group">
+          <label class="complaint-form-label" for="complaintTopic">หัวข้อ</label>
+          <div class="complaint-select-wrapper">
+            <select class="complaint-select" id="complaintTopic" name="topic" required>
+              <option value="แจ้งงดใช้แผงค้าชั่วคราว (ระบุเดือน)">แจ้งงดใช้แผงค้าชั่วคราว (ระบุเดือน)</option>
+              <option value="ร้องเรียนการให้บริการแผงค้า" selected>ร้องเรียนการให้บริการแผงค้า</option>
+              <option value="สอบถามทั่วไป">สอบถามทั่วไป</option>
+            </select>
+            <div class="complaint-select-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="complaint-form-group">
+          <label class="complaint-form-label" for="complaintDetail">รายละเอียดเพิ่มเติม</label>
+          <textarea class="complaint-textarea" id="complaintDetail" name="detail" rows="4" placeholder="ระบุรายละเอียด..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-complaint-submit" id="btnSubmitComplaint">ส่งข้อมูล</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: ใบเสร็จรับเงินทางการ (Official Municipal Utility Receipt Slip) -->
+  <div class="receipt-modal-backdrop" id="officialReceiptModal" role="dialog" aria-labelledby="rcptDocMainTitle" aria-modal="true">
+    <div class="receipt-dialog-container">
+
+      <!-- Top Action Bar -->
+      <div class="receipt-modal-actions">
+        <button type="button" class="btn-receipt-action btn-print" id="btnPrintReceipt">
+          <svg style="width:15px; height:15px; vertical-align:middle; display:inline-block; margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          <span>สั่งพิมพ์ใบเสร็จ</span>
+        </button>
+        <button type="button" class="btn-receipt-action btn-close" id="btnCloseReceipt">
+          ✕ ปิดหน้าต่าง
+        </button>
+      </div>
+
+      <!-- The Official Receipt Paper Sheet -->
+      <div class="official-receipt-sheet" id="printableReceiptArea">
+
+        <!-- Top Header: Logo + Contact (Left) & Title + Org (Right) -->
+        <div class="receipt-header-row">
+          <div class="receipt-brand-left">
+            <img src="images/logo.png" alt="GURU IT" class="receipt-logo-img">
+            <div class="receipt-contact-info">
+              <span class="receipt-callcenter">Call Center 1662</span>
+              <span>www.guruit.co.th</span><br>
+              <span>E-mail: support@guruit.co.th</span>
+            </div>
+          </div>
+
+          <div class="receipt-title-right">
+            <div class="receipt-main-title" id="rcptDocMainTitle">ใบเสร็จรับเงินค่าเช่าแผงค้า</div>
+            <div class="receipt-subtitle">(ระบบบริหารและชำระค่าเช่าแผงค้า - MarketRent)</div>
+            <div class="receipt-org-name">กองคลัง เทศบาลตำบล / อบต.</div>
+            <div class="receipt-branch-tel">
+              สาขา <strong>ตลาดสดเทศบาล</strong><br>
+              โทรศัพท์ <strong>034-711601</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Body Layout: Content + Vertical Barcode -->
+        <div class="receipt-body-layout">
+          
+          <div class="receipt-content-col">
+            <!-- 3-Column Header Blue Grid Table -->
+            <table class="receipt-blue-grid">
+              <thead>
+                <tr>
+                  <th style="width:38%;">เลขที่ใบเสร็จ</th>
+                  <th style="width:34%;">รหัสผู้เช่า/แผงค้า</th>
+                  <th style="width:28%;">หน่วยงาน</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="rcptReceiptNo" style="font-family:monospace; font-size:12px; font-weight:800; color:#1e40af;">REC-11835801</td>
+                  <td id="rcptStallNo" style="font-weight:700;">A-10</td>
+                  <td id="rcptOrgCode">1183-64</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="receipt-blue-grid">
+              <thead>
+                <tr>
+                  <th style="width:38%;">วันที่ออกใบเสร็จ</th>
+                  <th style="width:34%;">งวดประจำเดือน</th>
+                  <th style="width:28%;">โซนตลาด/ล็อค</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="rcptIssueDate">15/10/2569</td>
+                  <td id="rcptBillingPeriod" style="font-size:10.5px;">-</td>
+                  <td id="rcptZoneRoute" style="font-size:10.5px;">-</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Tenant Name & Address -->
+            <div class="receipt-tenant-info-box">
+              <div><span class="receipt-tenant-label">ชื่อผู้เช่า:</span> <span class="receipt-tenant-val" id="rcptPayerName">-</span></div>
+              <div><span class="receipt-tenant-label">ที่อยู่/แผง:</span> <span class="receipt-tenant-val" id="rcptPayerAddress">-</span></div>
+            </div>
+
+            <!-- Fee Breakdown Table with Crisp Blue Borders -->
+            <table class="receipt-fee-table">
+              <thead>
+                <tr>
+                  <th style="width:58%;">รายการค่าธรรมเนียมเช่าแผง</th>
+                  <th style="width:27%;">จำนวนเงิน</th>
+                  <th style="width:15%;">หน่วย</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="item-name">ค่าเช่าพื้นที่แผงค้าตลาด</td>
+                  <td class="item-amount" id="rcptRentFee">30.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr>
+                  <td class="item-name">ค่าบำรุงรักษาตลาดและส่วนกลาง</td>
+                  <td class="item-amount" id="rcptMaintFee">15.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr>
+                  <td class="item-name">ค่าบริการจัดเก็บขยะและดูแลความสะอาด</td>
+                  <td class="item-amount" id="rcptTrashFee">5.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr>
+                  <td class="item-name">ค่าบริการทั่วไป</td>
+                  <td class="item-amount">0.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr style="background:#f1f5f9;">
+                  <td class="item-name" style="font-weight:700;">รวมเงินครั้งนี้</td>
+                  <td class="item-amount" id="rcptSubtotal" style="font-weight:700;">50.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr>
+                  <td class="item-name">ภาษีมูลค่าเพิ่ม (VAT)</td>
+                  <td class="item-amount">0.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr>
+                  <td class="item-name">ค้างชำระ (0 เดือน)</td>
+                  <td class="item-amount">0.00</td>
+                  <td class="item-unit">บาท</td>
+                </tr>
+                <tr class="highlight-total">
+                  <td class="item-name">รวมเงินที่ชำระทั้งสิ้น</td>
+                  <td class="item-amount" id="rcptGrandTotal">50.00</td>
+                  <td class="item-unit" style="font-weight:800; color:#1e3a8a;">บาท</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Notice & Digital Signatures -->
+            <div class="receipt-footer-section">
+              <div class="receipt-notice-text">
+                โปรดเก็บใบเสร็จรับเงินนี้ไว้เป็นหลักฐานการเช่าพื้นที่แผงค้าตลาดประจำงวด<br>
+                <strong>หากมีข้อสงสัยเกี่ยวกับค่าธรรมเนียม กรุณาติดต่อกองคลัง เทศบาลตำบล / อบต.</strong>
+              </div>
+
+              <div class="receipt-sign-row">
+                <!-- PAID Official Stamp -->
+                <div class="receipt-stamp-paid">
+                  PAID · ชำระแล้ว<br>
+                  <span id="rcptStampDate" style="font-size:9.5px; font-weight:600;">-</span>
+                </div>
+
+                <!-- Officer Signature -->
+                <div class="receipt-signature-box">
+                  <div class="receipt-signature-line"></div>
+                  <div>(นายตรวจตลาด / เจ้าหน้าที่การเงิน)</div>
+                  <div style="font-size:9px; color:#94a3b8;">ผู้รับเงิน กองคลังเทศบาล</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Vertical Barcode Strip Column (Right side, like the photo) -->
+          <div class="receipt-barcode-col">
+            <div class="vertical-barcode-wrap">
+              <div class="simulated-barcode-strip"></div>
+              <span class="barcode-text-vertical" id="rcptBarcodeText">1183580159730</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal: ดูสลิปแนบหลักฐาน (Slip Viewer) -->
+  <div class="complaint-modal-overlay" id="slipViewerModal" role="dialog" aria-modal="true">
+    <div class="complaint-modal-card" style="max-width: 420px; padding: 20px;">
+      <div class="complaint-modal-header" style="margin-bottom: 12px;">
+        <h2 class="complaint-modal-title" style="font-size: 16px;">สลิปหลักฐานการโอนเงิน</h2>
+        <button type="button" class="complaint-btn-close" id="btnCloseSlipViewer" aria-label="ปิด">✕</button>
+      </div>
+      <div style="text-align: center; background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+        <img src="" alt="สลิปหลักฐานการโอนเงิน" id="slipViewerImg" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      </div>
+      <div style="margin-top: 14px; text-align: right;">
+        <button type="button" class="btn-receipt-close" onclick="document.getElementById('slipViewerModal').classList.remove('active')" style="width: 100%;">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toastMessage"></div>
+
+  <script src="js/logout-modal.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Auth Check: Require login before accessing history page
+      const sessionUser = localStorage.getItem('smartpay_user');
+      if (!sessionUser) {
+        window.location.href = 'index.html#account';
+        return;
+      }
+
+      // Populate user info
+      try {
+        const user = JSON.parse(sessionUser);
+        const subEl = document.getElementById('historyUserSubtitle');
+        if (subEl && user) {
+          const rawStall = user.stallNo || user.houseNo || '-';
+          const stallLabel = rawStall.startsWith('แผง') ? rawStall : `แผงค้า ${rawStall}`;
+          const addrVal = user.address || (user.moo ? `โซน ${user.moo}` : '');
+          subEl.textContent = `คุณ${user.fullName || 'ผู้ใช้งาน'} · ${stallLabel} (${addrVal})`.trim();
+        }
+      } catch (err) {
+        console.error('Error loading history user:', err);
+      }
+
+      // Logout handler with confirmation modal
+      const btnLogout = document.querySelector('.nav-btn-outline');
+      if (btnLogout) {
+        btnLogout.dataset.logoutBound = 'true';
+        btnLogout.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (typeof window.showLogoutConfirm === 'function') {
+            window.showLogoutConfirm(() => {
+              localStorage.removeItem('smartpay_user');
+              window.location.href = 'index.html#account';
+            });
+          } else {
+            localStorage.removeItem('smartpay_user');
+            window.location.href = 'index.html#account';
+          }
+        });
+      }
+
+      const tabPay = document.getElementById('tabPayHistory');
+      const tabComplaint = document.getElementById('tabComplaintHistory');
+      const contentArea = document.getElementById('historyContentArea');
+      const complaintModal = document.getElementById('complaintModal');
+      const btnOpenNewComplaint = document.getElementById('btnOpenNewComplaint');
+      const btnCloseComplaint = document.getElementById('btnCloseComplaint');
+      const complaintForm = document.getElementById('complaintForm');
+      const toast = document.getElementById('toastMessage');
+
+      // Modals
+      const officialReceiptModal = document.getElementById('officialReceiptModal');
+      const btnCloseReceipt = document.getElementById('btnCloseReceipt');
+      const btnPrintReceipt = document.getElementById('btnPrintReceipt');
+      const slipViewerModal = document.getElementById('slipViewerModal');
+      const btnCloseSlipViewer = document.getElementById('btnCloseSlipViewer');
+      const slipViewerImg = document.getElementById('slipViewerImg');
+
+      let currentTab = 'pay';
+
+      function showToast(msg) {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
+      }
+
+      async function updateTabs() {
+        let payments = [];
+        let complaints = [];
+        if (window.MarketPayAPI) {
+          payments = await window.MarketPayAPI.Payments.getAll();
+          complaints = await window.MarketPayAPI.Complaints.getAll();
+        } else {
+          payments = JSON.parse(localStorage.getItem('smartpay_payments') || '[]');
+          complaints = JSON.parse(localStorage.getItem('smartpay_complaints') || '[]');
+        }
+        if (tabPay) {
+          tabPay.textContent = `การชำระเงิน (${payments.length})`;
+        }
+        if (tabComplaint) {
+          tabComplaint.textContent = `คำร้อง (${complaints.length})`;
+        }
+      }
+
+      async function renderContent() {
+        if (currentTab === 'pay') {
+          let payments = [];
+          if (window.MarketPayAPI && window.MarketPayAPI.Payments) {
+            payments = await window.MarketPayAPI.Payments.getAll();
+          } else {
+            payments = JSON.parse(localStorage.getItem('smartpay_payments') || '[]');
+          }
+          if (payments.length === 0) {
+            contentArea.innerHTML = `
+              <div class="history-empty-text">
+                ยังไม่มีประวัติการชำระเงิน<br>
+                <a href="payment.html" style="display:inline-block; margin-top:12px; color:#ea580c; font-weight:700; text-decoration:underline;">
+                  ไปที่หน้าชำระเงินค่าเช่าแผง
+                </a>
+              </div>
+            `;
+          } else {
+            let html = '<div style="display:flex; flex-direction:column; gap:14px; margin-bottom:20px;">';
+            payments.forEach((p) => {
+              const monthsBadges = (p.months || []).map(m => `
+                <span style="background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; font-size:12px; font-weight:600; padding:2px 8px; border-radius:6px; margin-right:4px; display:inline-block; margin-top:3px;">
+                  ${m}
+                </span>
+              `).join('');
+
+              const statusRaw = p.status || 'รอตรวจสอบ';
+              const isApproved = statusRaw.includes('ชำระเงินเรียบร้อย') || statusRaw.includes('อนุมัติ') || statusRaw === 'approved' || statusRaw === 'ชำระแล้ว';
+              const isRejected = statusRaw.includes('ปฏิเสธ') || statusRaw.includes('ไม่อนุมัติ');
+              const isPending = !isApproved && !isRejected;
+
+              let badgeHtml = '';
+              if (isApproved) {
+                badgeHtml = `
+                  <span style="background:#dcfce7; color:#166534; font-size:12px; font-weight:700; padding:4px 12px; border-radius:9999px; border:1px solid #86efac; display:inline-flex; align-items:center; gap:4px;">
+                    ✓ ชำระเงินเรียบร้อย
+                  </span>
+                `;
+              } else if (isPending) {
+                badgeHtml = `
+                  <span style="background:#fef3c7; color:#b45309; font-size:12px; font-weight:700; padding:4px 12px; border-radius:9999px; border:1px solid #fcd34d; display:inline-flex; align-items:center; gap:4px;">
+                    ⏳ รอเจ้าหน้าที่ตรวจสอบสลิป
+                  </span>
+                `;
+              } else {
+                badgeHtml = `
+                  <span style="background:#fee2e2; color:#b91c1c; font-size:12px; font-weight:700; padding:4px 12px; border-radius:9999px; border:1px solid #fca5a5; display:inline-flex; align-items:center; gap:4px;">
+                    ✕ ปฏิเสธ (สลิปไม่ถูกต้อง)
+                  </span>
+                `;
+              }
+
+              const titleLabel = isApproved ? 'เลขที่ใบเสร็จ:' : 'รหัสรายการชำระ:';
+
+              html += `
+                <div style="background:#ffffff; border:1px solid #fed7aa; border-radius:14px; padding:18px 20px; box-shadow:0 4px 12px rgba(234, 88, 12, 0.05);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+                    <div>
+                      <span style="font-weight:700; color:#0f172a; font-size:15px;">${titleLabel} ${p.receiptNo || p.id}</span>
+                      <div style="font-size:12px; color:#64748b; margin-top:2px;">
+                        ทำรายการเมื่อ: ${p.date}
+                      </div>
+                    </div>
+                    ${badgeHtml}
+                  </div>
+
+                  <div style="background:#fffaf5; border:1px solid #fde8d7; border-radius:10px; padding:12px 14px; margin:10px 0; font-size:13px; line-height:1.6;">
+                    <div style="color:#475569;">
+                      <strong>ข้อมูลผู้เช่า:</strong> ${p.payerName} (${p.phone}) · <strong>${p.stallNo}</strong> (${p.zone})
+                    </div>
+                    <div style="color:#475569; margin-top:4px;">
+                      <strong>บริการ:</strong> ${p.service} (อัตรา 50 บาท/เดือน)
+                    </div>
+                    <div style="margin-top:6px;">
+                      <strong style="color:#475569;">รายการชำระ:</strong><br>
+                      ${monthsBadges}
+                    </div>
+                  </div>
+
+                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:12px; padding-top:10px; border-top:1px dashed #e2e8f0;">
+                    <div>
+                      <span style="font-size:12.5px; color:#64748b;">ยอดชำระสุทธิ: </span>
+                      <span style="font-size:18px; font-weight:800; color:#ea580c;">${(p.totalAmount || 0).toLocaleString('th-TH')}.00 บาท</span>
+                    </div>
+
+                    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                      ${(p.slipImg || p.slip_img || p.slip_url) ? `
+                        <button type="button" class="btn-open-slip" data-id="${p.id || p.receiptNo || p.receipt_no}" style="background:#f8fafc; color:#334155; border:1px solid #cbd5e1; padding:7px 12px; border-radius:8px; font-size:12.5px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:5px;" title="ดูภาพสลิปหลักฐานที่แนบไว้">
+                          <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                          <span>ดูสลิปแนบ</span>
+                        </button>
+                      ` : ''}
+                      ${isApproved ? `
+                        <button type="button" class="btn-open-receipt" data-id="${p.id || p.receiptNo}" style="background:linear-gradient(135deg, #ff5500 0%, #ea580c 100%); color:#ffffff; border:none; padding:7px 15px; border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer; box-shadow:0 2px 8px rgba(234, 88, 12, 0.25); display:inline-flex; align-items:center; gap:5px;" title="เปิดดูใบเสร็จรับเงินอิเล็กทรอนิกส์">
+                          <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                          <span>ดูใบเสร็จ (E-Receipt)</span>
+                        </button>
+                      ` : isPending ? `
+                        <span style="background:#fff7ed; color:#c2410c; border:1px dashed #fed7aa; padding:7px 14px; border-radius:8px; font-size:12.5px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" title="ระบบจะออกใบเสร็จรับเงินให้อัตโนมัติเมื่อเจ้าหน้าที่หลังบ้านตรวจสอบและกดอนุมัติแล้ว">
+                          <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                          <span>รอเจ้าหน้าที่อนุมัติ (ยังไม่ออกใบเสร็จ)</span>
+                        </span>
+                      ` : `
+                        <span style="background:#fef2f2; color:#dc2626; border:1px solid #fecaca; padding:7px 12px; border-radius:8px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+                          <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          <span>สลิปไม่ผ่านการอนุมัติ</span>
+                        </span>
+                      `}
+                    </div>
+                  </div>
+                </div>
+              `;
+            });
+            html += '</div>';
+            contentArea.innerHTML = html;
+
+            // Wire up buttons inside rendered cards
+            contentArea.querySelectorAll('.btn-open-receipt').forEach(btn => {
+              btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                openReceiptModal(id);
+              });
+            });
+
+            contentArea.querySelectorAll('.btn-open-slip').forEach(btn => {
+              btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                openSlipModal(id);
+              });
+            });
+          }
+        } else {
+          let complaints = [];
+          if (window.MarketPayAPI && window.MarketPayAPI.Complaints) {
+            complaints = await window.MarketPayAPI.Complaints.getAll();
+          } else {
+            complaints = JSON.parse(localStorage.getItem('smartpay_complaints') || '[]');
+          }
+          if (complaints.length === 0) {
+            contentArea.innerHTML = '<div class="history-empty-text">ยังไม่มีประวัติการส่งคำร้อง</div>';
+          } else {
+            let html = '<div style="display:flex; flex-direction:column; gap:14px; margin-bottom:20px;">';
+            complaints.forEach((c) => {
+              const statusRaw = c.status || 'รอดำเนินการ';
+              let badgeHtml = '';
+              if (statusRaw.includes('แก้ไขแล้ว') || statusRaw.includes('เสร็จสิ้น') || statusRaw === 'approved') {
+                badgeHtml = `
+                  <span style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-size:12px; font-weight:700; padding:4px 12px; border-radius:9999px; display:inline-flex; align-items:center; gap:4px;">
+                    ✓ ดำเนินการแก้ไขแล้ว
+                  </span>
+                `;
+              } else if (statusRaw.includes('กำลัง')) {
+                badgeHtml = `
+                  <span style="background:#eff6ff; color:#1e40af; border:1px solid #bfdbfe; font-size:12px; font-weight:700; padding:4px 12px; border-radius:9999px; display:inline-flex; align-items:center; gap:4px;">
+                    ⏳ กำลังดำเนินการ
+                  </span>
+                `;
+              } else {
+                badgeHtml = `
+                  <span style="background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; font-size:12px; font-weight:700; padding:4px 12px; border-radius:9999px; display:inline-flex; align-items:center; gap:4px;">
+                    ● รอดำเนินการ
+                  </span>
+                `;
+              }
+
+              const replyText = (c.adminReply || c.admin_reply || '').trim();
+              let replySectionHtml = '';
+              if (replyText) {
+                replySectionHtml = `
+                  <div class="complaint-officer-reply">
+                    <div class="complaint-officer-reply-header">
+                      <span class="complaint-officer-reply-icon" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                          <defs>
+                            <linearGradient id="bubbleGrad_${c.id || c.reqId}" x1="20%" y1="0%" x2="80%" y2="100%">
+                              <stop offset="0%" stop-color="#f5f3ff"/>
+                              <stop offset="40%" stop-color="#ede9fe"/>
+                              <stop offset="100%" stop-color="#ddd6fe"/>
+                            </linearGradient>
+                            <filter id="bubbleShadow_${c.id || c.reqId}" x="-10%" y="-10%" width="120%" height="120%">
+                              <feDropShadow dx="0" dy="1" stdDeviation="0.8" flood-color="#7c3aed" flood-opacity="0.15"/>
+                            </filter>
+                          </defs>
+                          <path d="M20 11.2C20 15.2 16.4 18.2 12 18.2C10.7 18.2 9.4 17.9 8.3 17.4L4.5 18.8L5.7 15.3C4.6 14.1 4 12.7 4 11.2C4 7.2 7.6 4.2 12 4.2C16.4 4.2 20 7.2 20 11.2Z" 
+                                fill="url(#bubbleGrad_${c.id || c.reqId})" 
+                                stroke="#c4b5fd" 
+                                stroke-width="1.2" 
+                                filter="url(#bubbleShadow_${c.id || c.reqId})"/>
+                        </svg>
+                      </span>
+                      <span class="complaint-officer-reply-title">ผลการดำเนินการ / การตอบกลับจากเจ้าหน้าที่:</span>
+                    </div>
+                    <div class="complaint-officer-reply-body">
+                      ${replyText}
+                    </div>
+                  </div>
+                `;
+              } else {
+                replySectionHtml = `
+                  <div class="complaint-officer-pending">
+                    <span class="complaint-officer-pending-dot"></span>
+                    <span>อยู่ระหว่างรอเจ้าหน้าที่ฝ่ายจัดเก็บรายได้ตรวจสอบและบันทึกผลการดำเนินการ</span>
+                  </div>
+                `;
+              }
+
+              html += `
+                <div style="background:#ffffff; border:1px solid #fed7aa; border-radius:14px; padding:18px 20px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+                    <div style="font-weight:700; color:#1e293b; font-size:15.5px;">${c.topic || 'คำร้องทั่วไป'}</div>
+                    ${badgeHtml}
+                  </div>
+                  <div style="font-size:12.5px; color:#64748b; margin-bottom:10px;">
+                    เลขที่: <strong style="color:#ea580c; font-family:monospace;">${c.reqId || c.id}</strong> · บริการ: ${c.service || 'ค่าเช่าแผง / การเช่าแผงค้า'} · วันที่ส่ง: ${c.date || '-'}
+                  </div>
+                  <div style="font-size:13.5px; color:#334155; line-height:1.6; background:#f8fafc; padding:12px 14px; border-radius:10px; border:1px solid #e2e8f0;">
+                    ${c.detail}
+                  </div>
+                  ${replySectionHtml}
+                </div>
+              `;
+            });
+            html += '</div>';
+            contentArea.innerHTML = html;
+          }
+        }
+      }
+
+      // Official Municipal Receipt Modal Open & Populate Logic
+      async function openReceiptModal(paymentId) {
+        let p = null;
+        if (window.MarketRentAPI && window.MarketRentAPI.Payments) {
+          try {
+            p = await window.MarketRentAPI.Payments.getById(paymentId);
+          } catch (e) {
+            console.warn('API getById failed, fallback to local', e);
+          }
+        }
+        if (!p) {
+          const payments = JSON.parse(localStorage.getItem('smartpay_payments') || '[]');
+          p = payments.find(item => item.id === paymentId || item.receiptNo === paymentId);
+        }
+        if (!p) {
+          showToast('ไม่พบข้อมูลใบเสร็จ');
+          return;
+        }
+
+        const statusRaw = p.status || '';
+        const isApproved = statusRaw.includes('ชำระเงินเรียบร้อย') || statusRaw.includes('อนุมัติ') || statusRaw === 'approved' || statusRaw === 'ชำระแล้ว';
+        if (!isApproved) {
+          showToast('รายการนี้อยู่ระหว่างรอเจ้าหน้าที่ตรวจสอบ จึงยังไม่สามารถเปิดดูหรือพิมพ์ใบเสร็จรับเงินได้');
+          return;
+        }
+
+        const total = Number(p.totalAmount || 0);
+        const mCount = (p.months && p.months.length) || (p.monthKeys && p.monthKeys.length) || Math.max(1, Math.round(total / 2000));
+        let rentPart = (1950 * mCount).toFixed(2);
+        let trashPart = (50 * mCount).toFixed(2);
+        let maintPart = (0).toFixed(2);
+        if (total > 0 && Math.abs(total - (1950 * mCount + 50 * mCount)) > 0.01) {
+          rentPart = (total * (1950 / 2000)).toFixed(2);
+          trashPart = (total - Number(rentPart)).toFixed(2);
+        }
+
+        const recNo = p.receiptNo || p.id || ('REC-' + Math.floor(10000000 + Math.random() * 90000000));
+        const numOnly = recNo.replace(/\D/g, '') || '1183580159730';
+
+        const elRec = document.getElementById('rcptReceiptNo');
+        const elStall = document.getElementById('rcptStallNo');
+        const elOrg = document.getElementById('rcptOrgCode');
+        const elDate = document.getElementById('rcptIssueDate');
+        const elPeriod = document.getElementById('rcptBillingPeriod');
+        const elZone = document.getElementById('rcptZoneRoute');
+        const elPayer = document.getElementById('rcptPayerName');
+        const elAddr = document.getElementById('rcptPayerAddress');
+        const elRent = document.getElementById('rcptRentFee');
+        const elMaint = document.getElementById('rcptMaintFee');
+        const elTrash = document.getElementById('rcptTrashFee');
+        const elSub = document.getElementById('rcptSubtotal');
+        const elGrand = document.getElementById('rcptGrandTotal');
+        const elStamp = document.getElementById('rcptStampDate');
+        const elBarcode = document.getElementById('rcptBarcodeText');
+
+        if (elRec) elRec.textContent = recNo;
+        if (elStall) elStall.textContent = p.stallNo || '-';
+        if (elOrg) elOrg.textContent = '1183-64';
+        if (elDate) elDate.textContent = p.date || new Date().toLocaleDateString('th-TH');
+        if (elPeriod) elPeriod.textContent = (p.months && p.months.length) ? p.months.join(', ') : 'งวดปัจจุบัน';
+        if (elZone) elZone.textContent = p.zone ? `${p.zone} (020005.186)` : 'ตลาดสด (020005.186)';
+
+        if (elPayer) elPayer.textContent = p.payerName || '-';
+        if (elAddr) elAddr.textContent = `${p.stallNo || '-'} ${p.zone || ''} ตลาดเทศบาล`.trim();
+
+        if (elRent) elRent.textContent = rentPart;
+        if (elMaint) elMaint.textContent = maintPart;
+        if (elTrash) elTrash.textContent = trashPart;
+        if (elSub) elSub.textContent = total.toFixed(2);
+        if (elGrand) elGrand.textContent = total.toFixed(2);
+
+        if (elStamp) elStamp.textContent = p.date || new Date().toLocaleDateString('th-TH');
+        if (elBarcode) elBarcode.textContent = numOnly.padEnd(13, '0').slice(0, 13);
+
+        if (officialReceiptModal) {
+          officialReceiptModal.classList.add('active');
+        }
+      }
+
+      function closeReceiptModal() {
+        if (officialReceiptModal) {
+          officialReceiptModal.classList.remove('active');
+        }
+      }
+
+      // Attached Slip Viewer Modal Logic
+      async function openSlipModal(paymentId) {
+        let p = null;
+        const API = window.MarketRentAPI || window.MarketPayAPI;
+        if (API && API.Payments && API.Payments.getById) {
+          try {
+            p = await API.Payments.getById(paymentId);
+          } catch (e) {
+            console.warn('API getById failed, fallback to local', e);
+          }
+        }
+        if (!p) {
+          const payments = JSON.parse(localStorage.getItem('smartpay_payments') || '[]');
+          p = payments.find(item => String(item.id) === String(paymentId) || item.receiptNo === paymentId || item.receipt_no === paymentId);
+        }
+
+        const slipSrc = p && (p.slipImg || p.slip_img || p.slip_url);
+        if (!p || !slipSrc) {
+          showToast('ไม่พบไฟล์รูปสลิปหลักฐาน');
+          return;
+        }
+
+        if (slipViewerImg && slipViewerModal) {
+          slipViewerImg.src = slipSrc;
+          slipViewerModal.classList.add('active');
+        }
+      }
+
+      if (btnCloseReceipt) {
+        btnCloseReceipt.addEventListener('click', closeReceiptModal);
+      }
+
+      if (officialReceiptModal) {
+        officialReceiptModal.addEventListener('click', (e) => {
+          if (e.target === officialReceiptModal) {
+            closeReceiptModal();
+          }
+        });
+      }
+
+      if (btnPrintReceipt) {
+        btnPrintReceipt.addEventListener('click', () => {
+          window.print();
+        });
+      }
+
+      if (btnCloseSlipViewer && slipViewerModal) {
+        btnCloseSlipViewer.addEventListener('click', () => {
+          slipViewerModal.classList.remove('active');
+        });
+      }
+
+      if (slipViewerModal) {
+        slipViewerModal.addEventListener('click', (e) => {
+          if (e.target === slipViewerModal) {
+            slipViewerModal.classList.remove('active');
+          }
+        });
+      }
+
+      tabPay.addEventListener('click', () => {
+        currentTab = 'pay';
+        tabPay.className = 'btn-history-tab active';
+        tabComplaint.className = 'btn-history-tab inactive';
+        renderContent();
+      });
+
+      tabComplaint.addEventListener('click', () => {
+        currentTab = 'complaint';
+        tabComplaint.className = 'btn-history-tab active';
+        tabPay.className = 'btn-history-tab inactive';
+        renderContent();
+      });
+
+      if (btnOpenNewComplaint && complaintModal) {
+        btnOpenNewComplaint.addEventListener('click', () => {
+          complaintModal.classList.add('active');
+        });
+      }
+
+      if (btnCloseComplaint && complaintModal) {
+        btnCloseComplaint.addEventListener('click', () => {
+          complaintModal.classList.remove('active');
+        });
+      }
+
+      if (complaintModal) {
+        complaintModal.addEventListener('click', (e) => {
+          if (e.target === complaintModal) {
+            complaintModal.classList.remove('active');
+          }
+        });
+      }
+
+      if (complaintForm) {
+        complaintForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const service = document.getElementById('complaintService')?.value || 'ค่าเช่าแผง / การเช่าแผงค้า';
+          const topic = document.getElementById('complaintTopic')?.value || 'ร้องเรียนการให้บริการแผงค้า';
+          const detail = document.getElementById('complaintDetail')?.value || '';
+
+          const newComplaint = {
+            id: 'REQ-' + Date.now().toString().slice(-6),
+            service,
+            topic,
+            detail,
+            date: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' }),
+            status: 'รอดำเนินการ'
+          };
+
+          if (window.MarketPayAPI && window.MarketPayAPI.Complaints) {
+            await window.MarketPayAPI.Complaints.create(newComplaint);
+          } else {
+            const complaints = JSON.parse(localStorage.getItem('smartpay_complaints') || '[]');
+            complaints.unshift(newComplaint);
+            localStorage.setItem('smartpay_complaints', JSON.stringify(complaints));
+          }
+
+          showToast('ส่งข้อมูลคำร้องเรียบร้อยแล้ว');
+          complaintForm.reset();
+          await updateTabs();
+          if (currentTab === 'complaint') await renderContent();
+          setTimeout(() => {
+            if (complaintModal) complaintModal.classList.remove('active');
+          }, 900);
+        });
+      }
+
+      // Check query parameter or hash to automatically switch to complaints tab
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('tab') === 'complaint' || window.location.hash === '#complaint' || window.location.hash === '#tabComplaint') {
+        currentTab = 'complaint';
+        if (tabComplaint) tabComplaint.className = 'btn-history-tab active';
+        if (tabPay) tabPay.className = 'btn-history-tab inactive';
+      }
+
+      await updateTabs();
+      await renderContent();
+    });
+  </script>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-nav" aria-label="เมนูมือถือ">
+    <a href="index.html"><span aria-hidden="true">⌂</span>หน้าแรก</a>
+    <a href="payment.html"><span aria-hidden="true">฿</span>ชำระเงิน</a>
+    <a href="history.html" class="active"><span aria-hidden="true">▤</span>ประวัติ</a>
+    <a href="account.html"><span aria-hidden="true">◎</span>บัญชี</a>
+  </nav>
+</body>
+</html>
